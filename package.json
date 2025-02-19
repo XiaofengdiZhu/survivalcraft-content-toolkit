@@ -1,0 +1,213 @@
+{
+  "name": "survivalcraft-content-toolkit",
+  "displayName": "%main.displayName%",
+  "description": "%main.description%",
+  "version": "0.1.0",
+  "icon": "icon.png",
+  "author": {
+    "name": "XiaofengdiZhu 销锋镝铸",
+    "url": "https://github.com/XiaofengdiZhu/"
+  },
+  "publisher": "XiaofengdiZhu",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit",
+  "bugs": {
+    "url": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit.git"
+  },
+  "engines": {
+    "vscode": "^1.97.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:xml"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "survivalcraft-content-toolkit.insertRandomGuid",
+        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "title": "%commands.insertRandomGuid.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
+        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "title": "%commands.addToPreDatabaseFiles.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.removeFromPreDatabaseFiles",
+        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "title": "%commands.removeFromPreDatabaseFiles.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.addToPreLanguageFiles",
+        "when": "resourceExtname == .json",
+        "title": "%commands.addToPreLanguageFiles.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
+        "when": "resourceExtname == .json",
+        "title": "%commands.removeFromPreLanguageFiles.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.openFile",
+        "when": "false",
+        "title": "打开文件"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "survivalcraft-content-toolkit.insertRandomGuid",
+          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "group": "1_modification@1"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreDatabaseFiles",
+          "when": "resourcePath in sct.preposedDatabaseFiles",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreLanguageFiles",
+          "when": "resourcePath not in sct.preposedLanguageFiles && resourceExtname == .json",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
+          "when": "resourcePath in sct.preposedLanguageFiles",
+          "group": "1_modification@1.01"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreDatabaseFiles",
+          "when": "resourcePath in sct.preposedDatabaseFiles",
+          "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreLanguageFiles",
+          "when": "resourcePath not in sct.preposedLanguageFiles && resourceExtname == .json",
+          "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
+          "when": "resourcePath in sct.preposedLanguageFiles",
+          "group": "2_workspace"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreDatabaseFiles",
+          "when": "resourcePath in sct.preposedDatabaseFiles",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreLanguageFiles",
+          "when": "resourcePath not in sct.preposedLanguageFiles && resourceExtname == .json",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
+          "when": "resourcePath in sct.preposedLanguageFiles",
+          "group": "navigation"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "xml",
+        "path": "./src/snippets.json"
+      }
+    ],
+    "configuration": {
+      "title": "%main.displayName%",
+      "properties": {
+        "survivalcraft-content-toolkit.preposedLanguageFiles": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%configurations.preposedLanguageFiles.description%",
+          "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.defaultDatabaseXsdPath": {
+          "type": "string",
+          "default": "https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd",
+          "markdownDescription": "%configurations.defaultDatabaseXsdPath.description%",
+          "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.preposedDatabaseFiles": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%configurations.preposedDatabaseFiles.description%",
+          "scope": "machine"
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "xml",
+        "extensions": [
+          ".xdb",".clo",".cr"
+        ]
+      }
+    ]
+  },
+  "l10n": "./l10n",
+  "extensionDependencies": [
+    "redhat.vscode-xml"
+  ],
+  "scripts": {
+    "vscode:prepublish": "yarn run package",
+    "compile": "yarn run check-types && yarn run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "yarn run check-types && yarn run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.97.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
+    "eslint": "^9.19.0",
+    "esbuild": "^0.24.2",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.7.3",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

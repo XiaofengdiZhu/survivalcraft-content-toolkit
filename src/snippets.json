@@ -1,0 +1,8 @@
+{
+	"Insert a random GUID": {
+		"prefix": "Guid",
+		"body": [
+			"Guid=\"$UUID\""
+		]
+	}
+}
