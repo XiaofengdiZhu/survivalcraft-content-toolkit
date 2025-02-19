@@ -21,5 +21,6 @@
     "messages.removedFromPreDatabaseFiles": "The file is successfully removed from the SCT preposed database files",
     "messages.alreadyInPreLanguageFiles": "The file is already in the SCT preposed language files",
     "messages.addedToPreLanguageFiles": "The file is successfully added to the SCT preposed language files",
-    "messages.removedFromPreLanguageFiles": "The file is successfully removed from the SCT preposed language files"
+    "messages.removedFromPreLanguageFiles": "The file is successfully removed from the SCT preposed language files",
+    "messages.clipboardNotContainsTagWithGuid": "The clipboard does not contain a tag with GUID"
 }

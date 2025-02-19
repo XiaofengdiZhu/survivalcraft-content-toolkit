@@ -77,7 +77,6 @@ export function updateDatabaseDiagnostics(document: vscode.TextDocument, diagnos
     if (isPreposedDatabaseFile && !openedPreposedDatabaseFiles.includes(document.fileName)) {
         openedPreposedDatabaseFiles.push(document.fileName);
     }
-    console.log(document.fileName);
     const text = document.getText();
     const diagnostics: vscode.Diagnostic[] = [];
     let match: RegExpMatchArray | null;

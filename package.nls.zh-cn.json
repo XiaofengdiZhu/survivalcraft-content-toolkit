@@ -2,6 +2,7 @@
     "main.displayName": "生存战争内容工具箱",
     "main.description": "用于辅助编辑生存战争游戏的内容文件的工具箱，包括数据库(.xdb)和部件(Widget、Screen、Dialog)",
     "commands.insertRandomGuid.title": "插入一个随机 GUID",
+    "commands.insertClipboardWithRandomizedGuids.title": "插入 GUID 随机化的剪贴板",
     "commands.addToPreDatabaseFiles.title": "添加该文件到 SCT 前置数据库中",
     "commands.removeFromPreDatabaseFiles.title": "从 SCT 前置数据库文件中移除该文件",
     "commands.addToPreLanguageFiles.title": "添加该文件到 SCT 前置语言文件中",

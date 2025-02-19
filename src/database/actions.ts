@@ -29,7 +29,7 @@ class GuidCodeActionProvider implements vscode.CodeActionProvider {
                 case 'duplicateGuid': {
                     const action = new vscode.CodeAction(vscode.l10n.t("actions.replaceWithRandomGuid"), vscode.CodeActionKind.QuickFix);
                     action.edit = new vscode.WorkspaceEdit();
-                    action.edit.replace(document.uri, diagnostic.range, `Guid="${this.generateRandomGuid()}"`);
+                    action.edit.replace(document.uri, diagnostic.range, `Guid="${generateRandomGuid()}"`);
                     action.diagnostics = [diagnostic];
                     action.isPreferred = true;
                     actions.push(action);
@@ -74,13 +74,6 @@ class GuidCodeActionProvider implements vscode.CodeActionProvider {
             }
         }
         return actions;
-    }
-
-    private generateRandomGuid(): string {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
     }
 }
 
@@ -194,6 +187,13 @@ function generateGuidDefinitionHover(guid: string, range: vscode.Range): vscode.
         markdownString.isTrusted = true;
         return Promise.resolve(new vscode.Hover(markdownString, range));
     }
+}
+
+export function generateRandomGuid(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }
 
 function getMatch(document: vscode.TextDocument, position: vscode.Position, pattern: RegExp): { result: RegExpMatchArray, range: vscode.Range } | null {

@@ -21,6 +21,10 @@ A toolkit for assisting in the editing of content files for Survivalcraft game, 
   **查看继承码的定义 (InheritanceParent)**：将鼠标悬停在一个InheritanceParent上，或者右键点击它，然后点击`转到定义`
 * **View the references of GUIDs**: Hover cursor on a GUID, or right click it and then clik `Find All References`.  
   **查看 GUID 的引用**：将鼠标悬停在一个识别码 (GUID) 上，或者右键点击它，然后点击`查找所有引用`
+* **Insert a random GUID**: You can add a random GUID by two ways: typing `guid` and hit the return key, or right-clicking in the editor and clicking `Insert a random GUID`.  
+  **插入一个随机 GUID**：你可以按以下两种方式添加一个随机 GUID：输入`guid`并按回车键，或者在编辑器中右键，然后点击`插入一个随机 GUID`
+* **Insert clipboard with randomized GUIDs**: You can insert clipboard with randomized GUIDs by two ways: right-clicking in the editor and clicking `Insert clipboard with randomized GUIDs`, or clicking the button `Insert clipboard with randomized GUIDs` in title bar.  
+  **插入 GUID 随机化的剪贴板**：你可以按以下两种方式插入 GUID 随机化的剪贴板：在编辑器中右键，然后点击`插入 GUID 随机化的剪贴板`，或者点击标题栏上的`插入 GUID 随机化的剪贴板`按钮
 
 #### Usage 使用
 For above features to work, please ensure your root element of database file is:  

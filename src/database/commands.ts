@@ -1,10 +1,13 @@
+import { match } from 'assert';
 import * as vscode from 'vscode';
+import { generateRandomGuid } from './actions';
 
 export function initeDatabaseCommands(subscriptions: vscode.Disposable[]) {
     const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
     let files: string[] = config.get('preposedDatabaseFiles') ?? [];
     vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
     subscriptions.push(vscode.commands.registerTextEditorCommand('survivalcraft-content-toolkit.insertRandomGuid', insertRandomGuid));
+    subscriptions.push(vscode.commands.registerTextEditorCommand('survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids', insertClipboardWithRandomizedGuids));
     subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.addToPreDatabaseFiles', addToPreDatabaseFiles));
     subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.removeFromPreDatabaseFiles', removeFromPreDatabaseFiles));
 }
@@ -32,7 +35,7 @@ function addToPreDatabaseFiles(arg: any) {
                 config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
                 vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
                 vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreDatabaseFiles", arg.fsPath));
-                if(!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)){
+                if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
                     vscode.workspace.openTextDocument(arg.fsPath);
                 }
             }
@@ -49,9 +52,28 @@ function removeFromPreDatabaseFiles(arg: any) {
             config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
             vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
             vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreDatabaseFiles", arg.fsPath));
-            if(!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)){
+            if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
                 removeFromPreDatabaseFiles(arg.fsPath);
             }
         }
     }
+}
+
+const tagWithGuidPattern = /<\w+.*?Guid="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}".*?>/;
+const guidPattern = /(?<=Guid=")[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(?=" ?(?!new-Value))/g;
+function insertClipboardWithRandomizedGuids() {
+    vscode.env.clipboard.readText().then(clipboard => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor || clipboard.length === 0) {
+            return;
+        }
+        if(clipboard.search(tagWithGuidPattern) === -1){
+            vscode.window.showWarningMessage(vscode.l10n.t("messages.clipboardNotContainsTagWithGuid"));
+            return;
+        }
+        const result = clipboard.replace(guidPattern, match => generateRandomGuid());
+        editor.edit(editBuilder => {
+            editBuilder.insert(editor.selection.active, result);
+        });
+    });
 }

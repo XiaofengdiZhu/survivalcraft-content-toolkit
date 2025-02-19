@@ -2,7 +2,7 @@
   "name": "survivalcraft-content-toolkit",
   "displayName": "%main.displayName%",
   "description": "%main.description%",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "icon": "icon.png",
   "author": {
     "name": "XiaofengdiZhu 销锋镝铸",
@@ -10,6 +10,7 @@
   },
   "publisher": "XiaofengdiZhu",
   "license": "Apache-2.0",
+  "pricing": "Free",
   "homepage": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit",
   "bugs": {
     "url": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit/issues"
@@ -34,6 +35,11 @@
         "command": "survivalcraft-content-toolkit.insertRandomGuid",
         "when": "resourceExtname == .xml || resourceExtname == .xdb",
         "title": "%commands.insertRandomGuid.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
+        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "title": "%commands.insertClipboardWithRandomizedGuids.title%"
       },
       {
         "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
@@ -67,6 +73,11 @@
           "command": "survivalcraft-content-toolkit.insertRandomGuid",
           "when": "resourceExtname == .xml || resourceExtname == .xdb",
           "group": "1_modification@1"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
+          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "group": "9_cutcopypaste@4"
         },
         {
           "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
@@ -109,6 +120,13 @@
           "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
           "when": "resourcePath in sct.preposedLanguageFiles",
           "group": "2_workspace"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
+          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "group": "navigation"
         }
       ],
       "editor/title/context": [
@@ -173,7 +191,9 @@
       {
         "id": "xml",
         "extensions": [
-          ".xdb",".clo",".cr"
+          ".xdb",
+          ".clo",
+          ".cr"
         ]
       }
     ]

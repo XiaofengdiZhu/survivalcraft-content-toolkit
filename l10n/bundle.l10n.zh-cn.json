@@ -21,5 +21,6 @@
     "messages.removedFromPreDatabaseFiles": "该文件已成功从 SCT 前置数据库中移除",
     "messages.alreadyInPreLanguageFiles": "该文件此前已添加到 SCT 前置语言文件中",
     "messages.addedToPreLanguageFiles": "该文件已成功添加到 SCT 前置语言文件中",
-    "messages.removedFromPreLanguageFiles": "该文件已成功从 SCT 前置语言文件中移除"
+    "messages.removedFromPreLanguageFiles": "该文件已成功从 SCT 前置语言文件中移除",
+    "messages.clipboardNotContainsTagWithGuid": "剪贴板中不包含带 GUID 的标签"
 }
