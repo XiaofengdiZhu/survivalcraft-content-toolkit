@@ -1,13 +1,14 @@
 {
     "main.displayName": "Survivalcraft Content Toolkit",
-    "main.description": "A toolkit for assisting in the editing of content files for Survivalcraft game, including database (.xdb) and widgets (or screens, dialogs)",
+    "main.description": "A toolkit for assisting in the editing of content files for Survivalcraft game, including database (.xdb), clothes (.clo) and widgets (or screens, dialogs)",
     "commands.insertRandomGuid.title": "Insert a random GUID",
     "commands.insertClipboardWithRandomizedGuids.title": "Insert clipboard with randomized GUIDs",
     "commands.addToPreDatabaseFiles.title": "Add this file to SCT preposed databases",
     "commands.removeFromPreDatabaseFiles.title": "Remove this file from SCT preposed databases",
     "commands.addToPreLanguageFiles.title": "Add this file to SCT preposed language jsons",
     "commands.removeFromPreLanguageFiles.title": "Remove this file from SCT preposed language jsons",
-    "configurations.preposedLanguageFiles.description": "### Preposed Language Files\n\nThis Extension will preload the strings from the following language files in order.\n\nFor example, if you add the full `en-US.json` to this list, when you hover the cursor on `\"[MainMenuScreen:2]\"`, you will see `Play (English)`.\n\nYou can right click on a json file to add it to this list.",
+    "configurations.preposedLanguageFiles.description": "### Preposed Language Files\n\nThis extension will preload the strings from the following language files in order.\n\nFor example, if you add the full `en-US.json` to this list, when you hover the cursor on `\"[MainMenuScreen:2]\"`, you will see `Play (English)`.\n\nYou can right click on a json file to add it to this list.",
     "configurations.defaultDatabaseXsdPath.description": "### Default Database.xsd path\n\nWhen the XSD is not set at the root element, you can set it in the Quick Fix.",
-    "configurations.preposedDatabaseFiles.description": "### Preposed Database Files\n\nThis Extension will preload the GUIDs from the following database files in order.\n\nYou can right click on a xml or xdb file to add it to this list."
+    "configurations.preposedDatabaseFiles.description": "### Preposed Database Files\n\nThis extension will preload the GUIDs from the following database files in order.\n\nYou can right click on a xml or xdb file to add it to this list.",
+    "configurations.defaultClothesXsdPath.description": "### Default Clothes.xsd path\n\nWhen the XSD is not set at the root element, you can set it in the Quick Fix."
 }

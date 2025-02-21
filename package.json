@@ -2,7 +2,7 @@
   "name": "survivalcraft-content-toolkit",
   "displayName": "%main.displayName%",
   "description": "%main.description%",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "icon": "icon.png",
   "author": {
     "name": "XiaofengdiZhu 销锋镝铸",
@@ -33,22 +33,22 @@
     "commands": [
       {
         "command": "survivalcraft-content-toolkit.insertRandomGuid",
-        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
         "title": "%commands.insertRandomGuid.title%"
       },
       {
         "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
-        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
         "title": "%commands.insertClipboardWithRandomizedGuids.title%"
       },
       {
         "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
-        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
         "title": "%commands.addToPreDatabaseFiles.title%"
       },
       {
         "command": "survivalcraft-content-toolkit.removeFromPreDatabaseFiles",
-        "when": "resourceExtname == .xml || resourceExtname == .xdb",
+        "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
         "title": "%commands.removeFromPreDatabaseFiles.title%"
       },
       {
@@ -71,17 +71,17 @@
       "editor/context": [
         {
           "command": "survivalcraft-content-toolkit.insertRandomGuid",
-          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
           "group": "1_modification@1"
         },
         {
           "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
-          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
           "group": "9_cutcopypaste@4"
         },
         {
           "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
-          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xdb || resourceFilename == Database.xml)",
           "group": "1_modification@1.01"
         },
         {
@@ -103,7 +103,7 @@
       "explorer/context": [
         {
           "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
-          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xdb || resourceFilename == Database.xml)",
           "group": "2_workspace"
         },
         {
@@ -125,14 +125,14 @@
       "editor/title": [
         {
           "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
-          "when": "resourceExtname == .xml || resourceExtname == .xdb",
+          "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
           "group": "navigation"
         }
       ],
       "editor/title/context": [
         {
           "command": "survivalcraft-content-toolkit.addToPreDatabaseFiles",
-          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xml || resourceExtname == .xdb)",
+          "when": "resourcePath not in sct.preposedDatabaseFiles && (resourceExtname == .xdb || resourceFilename == Database.xml)",
           "group": "navigation"
         },
         {
@@ -183,6 +183,12 @@
             "type": "string"
           },
           "markdownDescription": "%configurations.preposedDatabaseFiles.description%",
+          "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.defaultClothesXsdPath": {
+          "type": "string",
+          "default": "https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Clothes.xsd",
+          "markdownDescription": "%configurations.defaultClothesXsdPath.description%",
           "scope": "machine"
         }
       }

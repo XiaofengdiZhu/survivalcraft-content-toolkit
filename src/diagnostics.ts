@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { closeDatabaseDiagnostics, initeDatabaseDiagnostics, isDatabaseFileAndPreposed, updateDatabaseDiagnostics } from './database/diagnostics';
 import { initeLanguageDiagnostics } from './common/languageDiagnostics';
 import { initeColorDecoration, updateColorDecoration } from './common/colorDecoration';
+import { initeClothesDiagnostics, isClothesFile, updateClothesDiagnostics } from './clothes/diagnostics';
 
 let diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -15,6 +16,7 @@ export function initeDiagnostics(context: vscode.ExtensionContext) {
     initeColorDecoration(context.subscriptions);
     initeLanguageDiagnostics();
     initeDatabaseDiagnostics(diagnosticCollection);
+    initeClothesDiagnostics(diagnosticCollection);
 }
 
 let timeout: NodeJS.Timeout | undefined = undefined;
@@ -32,6 +34,8 @@ function updateDiagnostics(document: vscode.TextDocument, event: vscode.TextDocu
         const databaseFlags = isDatabaseFileAndPreposed(document.fileName);
         if(databaseFlags[0]){
             updateDatabaseDiagnostics(document, diagnosticCollection, databaseFlags[1]);
+        }else if(isClothesFile(document.fileName)){
+            updateClothesDiagnostics(document, diagnosticCollection);
         }
     }
 }

@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { allTagsWithGuid, allTagsWithInheritanceParent, isDatabaseFile, TagInfo } from './diagnostics';
 
 export function initeDatabaseActions(subscriptions: vscode.Disposable[]) {
-    subscriptions.push(vscode.languages.registerCodeActionsProvider("xml", new GuidCodeActionProvider(), {
-        providedCodeActionKinds: GuidCodeActionProvider.providedCodeActionKinds
+    subscriptions.push(vscode.languages.registerCodeActionsProvider("xml", new DatabaseActionProvider(), {
+        providedCodeActionKinds: DatabaseActionProvider.providedCodeActionKinds
     }));
     subscriptions.push(vscode.languages.registerReferenceProvider("xml", new GuidReferenceProvider()));
     subscriptions.push(vscode.languages.registerHoverProvider("xml", new GuidHoverProvider()));
@@ -13,7 +13,7 @@ export function initeDatabaseActions(subscriptions: vscode.Disposable[]) {
     subscriptions.push(vscode.languages.registerHoverProvider("xml", new NewValueGuidHoverProvider()));
 };
 
-class GuidCodeActionProvider implements vscode.CodeActionProvider {
+class DatabaseActionProvider implements vscode.CodeActionProvider {
     static readonly providedCodeActionKinds = [
         vscode.CodeActionKind.QuickFix
     ];

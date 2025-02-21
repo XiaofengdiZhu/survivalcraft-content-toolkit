@@ -16,6 +16,7 @@
     "actions.setDatabaseXsd": "将 Database.xsd 设置为该文件的 XSD",
     "actions.guidReferencedBy": "这个 GUID 被继承于:\n\n",
     "actions.emptyString": "(空字符串)",
+    "actions.setClothesXsd": "将 Clothes.xsd 设置为该文件的 XSD",
     "messages.alreadyInPreDatabaseFiles": "该文件此前已添加到 SCT 前置数据库中",
     "messages.addedToPreDatabaseFiles": "该文件已成功添加到 SCT 前置数据库中",
     "messages.removedFromPreDatabaseFiles": "该文件已成功从 SCT 前置数据库中移除",

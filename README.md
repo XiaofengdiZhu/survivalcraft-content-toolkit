@@ -1,7 +1,7 @@
 # Survivalcraft Content Toolkit 生存战争内容工具箱
 
-A toolkit for assisting in the editing of content files for Survivalcraft game, including database (.xdb) and widgets (or screens, dialogs). Still in development.  
-用于辅助编辑生存战争游戏的内容文件的工具箱，包括数据库(.xdb)和部件(Widget、Screen、Dialog)。持续开发中。
+A toolkit for assisting in the editing of content files for Survivalcraft game, including database (.xdb), clothes (.clo) and widgets (or screens, dialogs). Still in development.  
+用于辅助编辑生存战争游戏的内容文件的工具箱，包括数据库(.xdb)、衣服(.clo)和部件(Widget、Screen、Dialog)。持续开发中。
 
 ## Features 功能
 
@@ -13,7 +13,7 @@ A toolkit for assisting in the editing of content files for Survivalcraft game, 
   * InheritanceParents without definition 没有定义的继承码
   * Invalid InheritanceParents 无效的继承码
 
-> [!NOTE]  
+> **NOTE 说明**  
 > A GUID in the tag with `new-Value` attribute will be considered as a InheritanceParent.  
 > 含有`new-Value`属性的标签中的识别码将被视为继承码
 
@@ -39,6 +39,14 @@ And you have to add the basic `Database.xml` to the preposed databases by right-
 
 For contents like `CenterColor="50, 150, 35"`, there will be a colored square ${{\color{#329623}■}}$ displayed after the `=` sign, indicating the color corresponding to the content.  
 在像`CenterColor="50, 150, 35"`这样内容的`=`后面会显示一个带颜色的方块${\color{#329623}■}$，以指示该内容对应的颜色
+
+# Clothes 衣服
+
+Only suggests to set the root element as  
+仅提示设置根元素为
+```xml
+<Mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Clothes.xsd">
+```
 
 ### Common 一般
 

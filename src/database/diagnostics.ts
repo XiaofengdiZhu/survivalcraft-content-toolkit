@@ -60,7 +60,7 @@ export function isDatabaseFile(fileName: string) {
 const rootTagPattern = /<\w+.*?>/;
 const tagWithGuidPattern = /<(\w+).*?Guid="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})".*?>/g;
 const inheritanceParentPattern = /<(\w+).*?InheritanceParent="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/g;
-const lowLevelTagNames = ["Parameter", "ParameterSet", "MemberComponentTemplate"];
+const lowLevelTagNames = ["Parameter", "ParameterSet", "MemberComponentTemplate", "MemberSubsystemTemplate"]; // 允许没有GUID，如果有GUID则必须任何标签中都没有与它重复GUID
 const allowedInheritanceParents: { [key: string]: string[] } = {
     "Folder": [],
     "ProjectTemplate": ["ProjectTemplate"],
