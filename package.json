@@ -204,6 +204,9 @@
       }
     ]
   },
+  "capabilities": {
+    "colorProvider": "true"
+  },
   "l10n": "./l10n",
   "extensionDependencies": [
     "redhat.vscode-xml"

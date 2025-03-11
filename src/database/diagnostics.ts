@@ -4,7 +4,8 @@ export class TagInfo {
     tagName: string;
     uri: vscode.Uri;
     range: vscode.Range;
-    name: string | null;
+    name: string | null;// Attribute Name
+
     constructor(tagName: string, uri: vscode.Uri, range: vscode.Range, name: string | null) {
         this.tagName = tagName;
         this.uri = uri;
