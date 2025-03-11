@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { allTagsWithGuid, allTagsWithInheritanceParent, isDatabaseFile, TagInfo } from './diagnostics';
+import { replaceRootElementToMod, setXsd } from '../actions';
 
 export function initeDatabaseActions(subscriptions: vscode.Disposable[]) {
     subscriptions.push(vscode.languages.registerCodeActionsProvider("xml", new DatabaseActionProvider(), {
@@ -36,38 +37,15 @@ class DatabaseActionProvider implements vscode.CodeActionProvider {
                     break;
                 }
                 case 'xsdNotSet': {
-                    const oldStartTag = document.getText(diagnostic.range);
-                    const match = oldStartTag.match(/<\w+/);
-                    if (match) {
-                        const action = new vscode.CodeAction(vscode.l10n.t("actions.setDatabaseXsd"), vscode.CodeActionKind.QuickFix);
-                        action.edit = new vscode.WorkspaceEdit();
-                        const xmlnsXsi = ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"';
-                        action.edit.insert(document.uri, diagnostic.range.start.translate(0, match[0].length), `${oldStartTag.includes(xmlnsXsi) ? '' : xmlnsXsi} xsi:noNamespaceSchemaLocation="${config.get('defaultDatabaseXsdPath') ?? 'https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd'}"`);
-                        action.diagnostics = [diagnostic];
-                        action.isPreferred = true;
+                    const action = setXsd("Database", document, diagnostic);
+                    if (action) {
                         actions.push(action);
                     }
                     break;
                 }
                 case 'cvc-elt.1.a': {
                     if (range.start.line === 0 || range.start.line === 1) {
-                        const action = new vscode.CodeAction(vscode.l10n.t("actions.replaceRootElementToMod"), vscode.CodeActionKind.QuickFix);
-                        const oldEndTag = `</${document.getText(diagnostic.range)}>`;
-                        action.edit = new vscode.WorkspaceEdit();
-                        action.edit.replace(document.uri, diagnostic.range, `Mod`);
-                        //将根元素的结束标签也替换为</Mod>
-                        const fullDocumentText = document.getText();
-                        const endTagIndex = fullDocumentText.indexOf(oldEndTag);
-                        if (endTagIndex !== -1) {
-                            const endTagRange = new vscode.Range(
-                                document.positionAt(endTagIndex),
-                                document.positionAt(endTagIndex + oldEndTag.length)
-                            );
-                            action.edit.replace(document.uri, endTagRange, `</Mod>`);
-                        }
-                        action.diagnostics = [diagnostic];
-                        action.isPreferred = true;
-                        actions.push(action);
+                        actions.push(replaceRootElementToMod(document, diagnostic));
                     }
                     break;
                 }
@@ -212,7 +190,7 @@ function sortTags(tags: TagInfo[], fsPath: string, preposedDatabaseFiles: string
     return tags.toSorted((a, b) => a.range.start.line - b.range.start.line - (a.uri.fsPath === fsPath && b.uri.fsPath !== fsPath ? 30000 : 0) - (a.uri.fsPath.endsWith('Database.xml') && !b.uri.fsPath.endsWith('Database.xml') ? 20000 : 0) - (preposedDatabaseFiles.includes(a.uri.fsPath) && !preposedDatabaseFiles.includes(b.uri.fsPath) ? 10000 : 0));
 }
 
-function generateTagHtml(tag: TagInfo){
+function generateTagHtml(tag: TagInfo) {
     const args = [
         tag.uri.toString(),
         tag.range.start.line,

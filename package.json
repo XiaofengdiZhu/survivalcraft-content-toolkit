@@ -172,7 +172,7 @@
         },
         "survivalcraft-content-toolkit.defaultDatabaseXsdPath": {
           "type": "string",
-          "default": "https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd",
+          "default": "https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd",
           "markdownDescription": "%configurations.defaultDatabaseXsdPath.description%",
           "scope": "machine"
         },
@@ -187,7 +187,13 @@
         },
         "survivalcraft-content-toolkit.defaultClothesXsdPath": {
           "type": "string",
-          "default": "https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Clothes.xsd",
+          "default": "https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/Clothes.xsd",
+          "markdownDescription": "%configurations.defaultClothesXsdPath.description%",
+          "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.defaultCraftingRecipesXsdPath": {
+          "type": "string",
+          "default": "https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/CraftingRecipes.xsd",
           "markdownDescription": "%configurations.defaultClothesXsdPath.description%",
           "scope": "machine"
         }

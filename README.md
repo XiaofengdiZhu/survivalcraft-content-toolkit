@@ -30,15 +30,15 @@ A toolkit for assisting in the editing of content files for Survivalcraft game, 
 For above features to work, please ensure your root element of database file is:  
 为了让以上功能能生效，请确保你的数据库文件的根元素是。
 ```xml
-<Mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gitee.com/THPRC/survivalcraft-api/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd">
+<Mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/Database.xsd">
 ```
 And you have to add the basic `Database.xml` to the preposed databases by right-clicking on it and clicking `Add this file to SCT preposed databases`.  
 同时你还需要将基础的`Database.xml`添加到前置数据库中（右键点击它，然后点击`添加该文件到 SCT 前置数据库中`）
 
 ### Widget 部件
 
-For contents like `CenterColor="50, 150, 35"`, there will be a colored square ${{\color{#329623}■}}$ displayed after the `=` sign, indicating the color corresponding to the content.  
-在像`CenterColor="50, 150, 35"`这样内容的`=`后面会显示一个带颜色的方块${\color{#329623}■}$，以指示该内容对应的颜色
+For contents like `CenterColor="50, 150, 35"`, there will be a colored square ${{\color{#329623}■}}$ displayed after the `=` sign, indicating the color corresponding to the content. When you hover on the square, you can edit the color in a visual way.  
+在像`CenterColor="50, 150, 35"`这样内容的`=`后面会显示一个带颜色的方块${\color{#329623}■}$，以指示该内容对应的颜色。当你将鼠标悬停在方块上，你可以可视化地编辑颜色。
 
 # Clothes 衣服
 

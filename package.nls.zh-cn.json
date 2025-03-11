@@ -10,5 +10,6 @@
     "configurations.preposedLanguageFiles.description": "### 前置语言文件\n\n该扩展将预先按顺序从以下语言文件读取字符串。\n\n例如将完整的`zh-CN.json`加入该列表后，当鼠标悬停在`\"[MainMenuScreen:2]\"`上时，将显示`游戏 (中文)`",
     "configurations.defaultDatabaseXsdPath.description": "### 默认 Database.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值",
     "configurations.preposedDatabaseFiles.description": "### 前置数据库文件\n\n该扩展将预先按顺序从以下数据库文件读取其中的 GUID。你可以在xml和xdb文件上右键来添加。",
-    "configurations.defaultClothesXsdPath.description": "### 默认 Clothes.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值"
+    "configurations.defaultClothesXsdPath.description": "### 默认 Clothes.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值",
+    "configurations.defaultCraftingRecipesXsdPath.description": "### 默认 CraftingRecipes.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值"
 }

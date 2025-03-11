@@ -3,6 +3,7 @@ import { closeDatabaseDiagnostics, initeDatabaseDiagnostics, isDatabaseFileAndPr
 import { initeLanguageDiagnostics } from './common/languageDiagnostics';
 import { initeColorDecoration } from './common/colorDecoration';
 import { initeClothesDiagnostics, isClothesFile, updateClothesDiagnostics } from './clothes/diagnostics';
+import { initeCraftingRecipesDiagnostics, isCraftingRecipesFile, updateCraftingRecipesDiagnostics } from './craftingrecipes/diagnostics';
 
 let diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -17,6 +18,7 @@ export function initeDiagnostics(context: vscode.ExtensionContext) {
     initeLanguageDiagnostics();
     initeDatabaseDiagnostics(diagnosticCollection);
     initeClothesDiagnostics(diagnosticCollection);
+    initeCraftingRecipesDiagnostics(diagnosticCollection);
 }
 
 let timeout: NodeJS.Timeout | undefined = undefined;
@@ -35,6 +37,8 @@ function updateDiagnostics(document: vscode.TextDocument, event: vscode.TextDocu
             updateDatabaseDiagnostics(document, diagnosticCollection, databaseFlags[1]);
         } else if (isClothesFile(document.fileName)) {
             updateClothesDiagnostics(document, diagnosticCollection);
+        } else if (isCraftingRecipesFile(document.fileName)) {
+            updateCraftingRecipesDiagnostics(document, diagnosticCollection);
         }
     }
 }
