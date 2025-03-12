@@ -24,7 +24,6 @@ class DatabaseActionProvider implements vscode.CodeActionProvider {
         if (!isDatabaseFile(document.fileName)) {
             return actions;
         }
-        const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
         for (const diagnostic of context.diagnostics) {
             switch (diagnostic.code) {
                 case 'duplicateGuid': {
@@ -94,8 +93,6 @@ class GuidHoverProvider implements vscode.HoverProvider {
     }
 }
 
-const inheritanceParentPattern = /InheritanceParent="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/;
-
 class InheritanceParentDefinitionProvider implements vscode.DefinitionProvider {
     public provideDefinition(
         document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken):
@@ -112,6 +109,8 @@ class InheritanceParentDefinitionProvider implements vscode.DefinitionProvider {
         }
     }
 }
+
+const inheritanceParentPattern = /InheritanceParent="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/;
 
 class InheritanceParentHoverProvider implements vscode.HoverProvider {
     public provideHover(

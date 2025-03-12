@@ -12,7 +12,7 @@ class ColorProvider implements vscode.DocumentColorProvider {
         const colors: vscode.ColorInformation[] = [];
         const text = document.getText();
         let match;
-        while ((match = colorPattern.exec(text)) !== null) {
+        while ((match = colorPattern.exec(text)) !== null && match.index !== undefined) {
             if (match[1] && match[2] && match[3]) {
                 const startPos = document.positionAt(match.index);
                 const endPos = document.positionAt(match.index + match[0].length);

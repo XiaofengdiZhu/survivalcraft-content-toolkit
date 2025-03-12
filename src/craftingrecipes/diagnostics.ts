@@ -13,6 +13,9 @@ export function isCraftingRecipesFile(fileName: string) {
 }
 
 const rootTagPattern = /<\w+.*?>/;
+const craftingRecipeTagPattern = /<Recipe.*?>/g;
+const ingredientPattern = / ([a-z])="\S+"/g;
+const craftingRecipeRowPattern = /^([ \t]*")([a-z ]*)"$/;
 
 export function updateCraftingRecipesDiagnostics(document: vscode.TextDocument, diagnosticCollection: vscode.DiagnosticCollection) {
     const text = document.getText();
@@ -36,6 +39,39 @@ export function updateCraftingRecipesDiagnostics(document: vscode.TextDocument, 
             diagnostic.source = 'survivalcraft-content-toolkit';
 
             diagnostics.push(diagnostic);
+        }
+    }
+    craftingRecipeTagPattern.lastIndex = 0;
+    while ((match = craftingRecipeTagPattern.exec(text)) !== null && match.index !== undefined) {
+        let line = document.positionAt(match.index).line;
+        const ingredients: string[] = [];
+        const tag = match[0];
+        while ((match = ingredientPattern.exec(tag)) !== null && match.index !== undefined) {
+            ingredients.push(match[1]);
+        }
+        while (++line < document.lineCount) {
+            const lineString = document.lineAt(line).text;
+            if ((match = craftingRecipeRowPattern.exec(lineString)) !== null && match.index !== undefined) {
+                const lengthBeforeChars = match[1].length;
+                const chars = match[2];
+                for (let i = 0; i < chars.length; i++) {
+                    const char = chars[i];
+                    const code = char.charCodeAt(0);
+                    if (code >= 97 && code <= 122 && !ingredients.includes(char)) {
+                        const diagnostic = new vscode.Diagnostic(
+                            new vscode.Range(line, lengthBeforeChars + i, line, lengthBeforeChars + i + 1),
+                            vscode.l10n.t("diagnostics.ingredientNotSet", char),
+                            vscode.DiagnosticSeverity.Error
+                        );
+                        diagnostic.code = 'ingredientNotSet';
+                        diagnostic.source = 'survivalcraft-content-toolkit';
+                        diagnostics.push(diagnostic);
+                    }
+                }
+            }
+            else {
+                break;
+            }
         }
     }
 

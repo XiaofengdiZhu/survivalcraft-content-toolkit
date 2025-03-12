@@ -26,30 +26,30 @@ export function initeLanguageDiagnostics() {
     }
 }
 
-export function updateLanguageDiagnostics(fileName: string, content: string){
+export function updateLanguageDiagnostics(fileName: string, content: string) {
     let originalJson;
-    try{
+    try {
         originalJson = JSON.parse(content.replace(/^\uFEFF/, ''));
     }
-    catch(e){
+    catch (e) {
         const err = e as Error;
         vscode.window.showErrorMessage(vscode.l10n.t("diagnostics.cannotLoadPreLanguage", fileName, err.message));
         return;
     }
     const languageName = removeStringsFromLanguageFile(fileName);
     originalLanguageFiles.set(fileName, new Language(languageName, originalJson));
-    let result : any = {};
-    for(const [fsPath, language] of originalLanguageFiles){
-        if(language.languageName === languageName){
+    let result: any = {};
+    for (const [fsPath, language] of originalLanguageFiles) {
+        if (language.languageName === languageName) {
             result = Object.assign(result, language.content);
         }
     }
     const nativeName = result["Language"]?.["Name"];
-    if(nativeName){
+    if (nativeName) {
         languageName2Native.set(languageName, nativeName);
         allLanguages.set(languageName, result);
     }
-    else{
+    else {
         vscode.window.showErrorMessage(vscode.l10n.t("diagnostics.noNativeLanguageName", languageName));
     }
 }
@@ -83,7 +83,7 @@ export function closeLanguageDiagnostics(fsPath: string, isPreposedDatabaseFile:
     }
 }
 
-export function readAndWatchLanguageFile(fsPath: string){
+export function readAndWatchLanguageFile(fsPath: string) {
     fs.readFile(fsPath, (err, data) => {
         if (err) {
             vscode.window.showErrorMessage(vscode.l10n.t("diagnostics.cannotLoadPreLanguage", fsPath, err.message));
@@ -97,9 +97,22 @@ export function readAndWatchLanguageFile(fsPath: string){
                         return;
                     }
                     updateLanguageDiagnostics(fsPath, data.toString("utf-8"));
-               });
+                });
             }
         }));
         updateLanguageDiagnostics(fsPath, data.toString("utf-8"));
     });
+}
+export function getPreferedLanguage(): any {
+    const vscodeLanguage = vscode.env.language.toLowerCase();
+    let enUs;
+    for (const [key, value] of allLanguages) {
+        const keyLowerCase = key.toLowerCase();
+        if (keyLowerCase === vscodeLanguage) {
+            return value;
+        } else if (keyLowerCase === "en-us") {
+            enUs = value;
+        }
+    }
+    return enUs ?? null;
 }

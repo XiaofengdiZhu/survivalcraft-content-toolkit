@@ -4,8 +4,9 @@ import { isDatabaseFileAndPreposed } from '../database/diagnostics';
 import { isClothesFile } from '../clothes/diagnostics';
 import { isCraftingRecipesFile } from '../craftingrecipes/diagnostics';
 
-const languageAttributePattern = /(\w+)="\[([\w\.]+)(?::(\w+))?\]"/;
-const craftingRecipePattern = /<Recipe .*?Result="(\w+)(?::(\w+))?" .*?Description="\[(\w+)\]"/;
+const languageAttributePattern = /(\w+)="\[([^\s:]+)(?::(\d+))?\]"/;
+const craftingRecipeTagPattern = /<Recipe .*?Result="([^\s:]+)(?::(\d+))?" .*?Description="\[(\d+)\]"/;
+const craftingRecipeAttributePattern = /(?:Result|Remains)="([^\s:]+)(?::(\d+))?"/;
 
 export function initeCommonActions(subscriptions: vscode.Disposable[]) {
     subscriptions.push(vscode.languages.registerHoverProvider('xml', new LanguageHoverProvider()));
@@ -18,6 +19,28 @@ class LanguageHoverProvider implements vscode.HoverProvider {
         if (document.languageId !== 'xml' || allLanguages.size === 0) {
             return null;
         }
+        if (isCraftingRecipesFile(document.fileName)) {
+            const wordRange = document.getWordRangeAtPosition(position, craftingRecipeAttributePattern);
+            if (wordRange) {
+                const match = document.getText(wordRange).match(craftingRecipeAttributePattern);
+                if (match && match[1]) {
+                    const info1 = match[1];
+                    const info2 = match[2];
+                    const lines: string[] = [];
+                    const emptyString = vscode.l10n.t("actions.emptyString");
+                    for (const [name, language] of allLanguages) {
+                        const string = language.Blocks?.[`${info1}:${info2 ?? "0"}`]?.DisplayName;
+                        if (typeof (string) === "string") {
+                            lines.push(`${string.length > 0 ? string : emptyString} \`${languageName2Native.get(name)}\``);
+                        }
+                    }
+                    if (lines.length > 0) {
+                        return Promise.resolve(new vscode.Hover(new vscode.MarkdownString(lines.join('\n\n')), wordRange));
+                    }
+                }
+                return null;
+            }
+        }
         const wordRange = document.getWordRangeAtPosition(position, languageAttributePattern);
         if (!wordRange) {
             return null;
@@ -28,8 +51,9 @@ class LanguageHoverProvider implements vscode.HoverProvider {
             const info1 = match[2];
             const info2 = match[3];
             const lines: string[] = [];
+            const emptyString = vscode.l10n.t("actions.emptyString");
             for (const [name, language] of allLanguages) {
-                let string;
+                let string: string | undefined;
                 const databaseFlags = isDatabaseFileAndPreposed(document.fileName);
                 if (databaseFlags[0]) {
                     if (info2) {
@@ -37,15 +61,14 @@ class LanguageHoverProvider implements vscode.HoverProvider {
                     }
                 } else if (isClothesFile(document.fileName)) {
                     if (info2) {
-                        string = language["Blocks"]?.[`${info1}:${info2}`]?.[attributeName];
+                        string = language.Blocks?.[`${info1}:${info2}`]?.[attributeName];
                     }
                 } else if (isCraftingRecipesFile(document.fileName)) {
-                    const wordRange1 = document.getWordRangeAtPosition(position, craftingRecipePattern);
+                    const wordRange1 = document.getWordRangeAtPosition(position, craftingRecipeTagPattern);
                     if (wordRange1) {
-                        const match1 = document.getText(wordRange1).match(craftingRecipePattern);
+                        const match1 = document.getText(wordRange1).match(craftingRecipeTagPattern);
                         if (match1 && match1[1] && match1[3]) {
-                            const num = match1[2];
-                            string = language["Blocks"]?.[`${match1[1]}:${num ?? "0"}`]?.[`CRDescription:${match1[3]}`];
+                            string = language.Blocks?.[`${match1[1]}:${match1[2] ?? "0"}`]?.[`CRDescription:${match1[3]}`];
                         }
                     }
                 }
@@ -54,12 +77,12 @@ class LanguageHoverProvider implements vscode.HoverProvider {
                         string = language["ContentWidgets"]?.[info1]?.[info2];
                     }
                 }
-                if (string) {
-                    lines.push(`${string.length > 0 ? string : vscode.l10n.t("actions.emptyString")} \`${languageName2Native.get(name)}\``);
+                if (typeof (string) === "string") {
+                    lines.push(`${string.length > 0 ? string : emptyString} \`${languageName2Native.get(name)}\``);
                 }
             }
             if (lines.length > 0) {
-                return Promise.resolve(new vscode.Hover(new vscode.MarkdownString(lines.join('\n\n')), new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character + match[1].length), wordRange.end)));
+                return Promise.resolve(new vscode.Hover(new vscode.MarkdownString(lines.join('\n\n')), wordRange));
             }
         }
     }

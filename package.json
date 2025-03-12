@@ -211,7 +211,19 @@
     ]
   },
   "capabilities": {
-    "colorProvider": "true"
+    "hoverProvider": "true",
+    "definitionProvider": "true",
+    "referencesProvider": "true",
+    "codeActionProvider": "true",
+    "colorProvider": "true",
+    "completionProvider": {
+      "resolveProvider": "true",
+      "triggerCharacters": [
+        ".",
+        " ",
+        "\""
+      ]
+    }
   },
   "l10n": "./l10n",
   "extensionDependencies": [
