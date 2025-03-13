@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { allTagsWithGuid, allTagsWithInheritanceParent, isDatabaseFile, TagInfo } from './diagnostics';
+import { allowedInheritanceParents, allTagsWithGuid, allTagsWithInheritanceParent, isDatabaseFile, TagInfo } from './diagnostics';
 import { replaceRootElementToMod, setXsd } from '../actions';
 
 export function initeDatabaseActions(subscriptions: vscode.Disposable[]) {
@@ -12,6 +12,7 @@ export function initeDatabaseActions(subscriptions: vscode.Disposable[]) {
     subscriptions.push(vscode.languages.registerHoverProvider("xml", new InheritanceParentHoverProvider()));
     subscriptions.push(vscode.languages.registerDefinitionProvider("xml", new NewValueGuidDefinitionProvider()));
     subscriptions.push(vscode.languages.registerHoverProvider("xml", new NewValueGuidHoverProvider()));
+    subscriptions.push(vscode.languages.registerCompletionItemProvider("xml", new DatabaseCompletionItemProvider(), ".", " ", "\""));
 };
 
 class DatabaseActionProvider implements vscode.CodeActionProvider {
@@ -198,5 +199,59 @@ function generateTagHtml(tag: TagInfo) {
         tag.range.end.character
     ];
     const fileName = tag.uri.fsPath.split('\\').pop() || tag.uri.fsPath.split('/').pop();
-    return `[${fileName}#${tag.range.start.line + 1}:${tag.range.start.character + 1}](command:survivalcraft-content-toolkit.openFile?${encodeURIComponent(JSON.stringify(args))}) (${vscode.l10n.t("main.tagTitle")}: \`${tag.tagName}\` ${vscode.l10n.t("main.nameTitle")}: \`${tag.name}\`)`;
+    return `[${fileName}#${tag.range.start.line + 1}:${tag.range.start.character + 1}](command:survivalcraft-content-toolkit.openFile?${encodeURIComponent(JSON.stringify(args))}) (${vscode.l10n.t("main.tagTitle")}: \`${tag.tagName}\` ${vscode.l10n.t("main.nameTitle")}: \`${tag.name ?? "/"}\`)`;
+}
+
+const attributeNamePattern = /<(\w+).*? Name="[^"]*"/;
+const inheritanceParentHeadPattern = /<(\w+).*? Name="(.*?)".*? InheritanceParent="[^"]*"/;
+
+class DatabaseCompletionItemProvider implements vscode.CompletionItemProvider {
+    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+        const results: vscode.CompletionItem[] = [];
+        if (!isDatabaseFile(document.fileName)) {
+            return results;
+        }
+        let wordRange = document.getWordRangeAtPosition(position, inheritanceParentHeadPattern);
+        if (wordRange) {
+            const match = document.getText(wordRange).match(inheritanceParentHeadPattern);
+            if (match !== null && match.index !== undefined) {
+                const allowParentTagName = allowedInheritanceParents[match[1]];
+                const attributeName = match[2];
+                if (allowParentTagName && allowParentTagName.length > 0) {
+                    for (const [guid, tagInfos] of allTagsWithGuid) {
+                        for (const tagInfo of tagInfos) {
+                            if (allowParentTagName.includes(tagInfo.tagName)) {
+                                const completionItem: vscode.CompletionItem = new vscode.CompletionItem(`<${tagInfo.tagName}${tagInfo.name ? ` Name="${tagInfo.name}"` : ` Guid="${guid}"`}>`, vscode.CompletionItemKind.Value);
+                                completionItem.insertText = guid;
+                                completionItem.documentation = new vscode.MarkdownString(`\`${guid}\``);
+                                if (tagInfo.name === attributeName) {
+                                    completionItem.preselect = true;
+                                }
+                                results.push(completionItem);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        wordRange = document.getWordRangeAtPosition(position, attributeNamePattern);
+        if (wordRange) {
+            const match = document.getText(wordRange).match(attributeNamePattern);
+            if (match !== null && match.index !== undefined) {
+                const tagName = match[1];
+                const allowParentTagName = allowedInheritanceParents[tagName];
+                const addedLabels: string[] = [];
+                for (const [guid, tagInfos] of allTagsWithGuid) {
+                    for (const tagInfo of tagInfos) {
+                        if (tagInfo.name && !addedLabels.includes(tagInfo.name) && (tagInfo.tagName === tagName || allowParentTagName.includes(tagInfo.tagName))) {
+                            addedLabels.push(tagInfo.name);
+                            const completionItem: vscode.CompletionItem = new vscode.CompletionItem({ label: tagInfo.name, description: `<${tagInfo.tagName}>` }, vscode.CompletionItemKind.Value);
+                            results.push(completionItem);
+                        }
+                    }
+                }
+            }
+        }
+        return results;
+    }
 }

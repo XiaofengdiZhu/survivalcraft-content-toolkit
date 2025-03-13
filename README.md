@@ -28,6 +28,10 @@ A toolkit for assisting in the editing of content files for Survivalcraft game, 
   ![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/insert_a_random_GUID.webp)
 * **Insert clipboard with randomized GUIDs**: You can insert clipboard with randomized GUIDs by two ways: right-clicking in the editor and clicking `Insert clipboard with randomized GUIDs`, or clicking the button `Insert clipboard with randomized GUIDs` in title bar.  
   **插入 GUID 随机化的剪贴板**：你可以按以下两种方式插入 GUID 随机化的剪贴板：在编辑器中右键，然后点击`插入 GUID 随机化的剪贴板`，或者点击标题栏上的`插入 GUID 随机化的剪贴板`按钮
+* **Code Completion Proposals**: When you edit the `Name` or `InheritanceParents` attribute, there will be code completion proposals.  
+  **代码补全提示**: 当你编辑`Name`或`InheritanceParents`属性时，会有代码补全提示
+  ![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/code_completion_proposals_for_Database.webp)
+
 
 #### Usage 使用
 You have to add the basic `Database.xml` to the preposed databases by right-clicking on it and clicking `Add this file to SCT preposed Databases`.  

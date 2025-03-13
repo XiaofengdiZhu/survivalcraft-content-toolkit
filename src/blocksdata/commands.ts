@@ -1,12 +1,23 @@
 import * as vscode from 'vscode';
 import { closeBlocksDataDiagnostics, readAndWatchBlocksDataFile } from './diagnostics';
 
+interface QuickSuggestions {
+    other?: string | boolean;
+    comments?: string | boolean;
+    strings?: string | boolean;
+}
 export function initeBlocksDataCommands(subscriptions: vscode.Disposable[]) {
     const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
     let files: string[] = config.get('preposedBlocksDataFiles') ?? [];
     vscode.commands.executeCommand('setContext', 'sct.preposedBlocksDataFiles', files);
     subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.addToPreBlocksDataFiles', addToPrePreBlocksDataFiles));
     subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.removeFromPreBlocksDataFiles', removeFromPrePreBlocksDataFiles));
+    const config1 = vscode.workspace.getConfiguration("editor", { languageId: "xml" });
+    const quickSuggestions: QuickSuggestions = config1.get("quickSuggestions") ?? {};
+    if (quickSuggestions.strings === "off") {
+        quickSuggestions.strings = "on";
+        config1.update("quickSuggestions", quickSuggestions, vscode.ConfigurationTarget.Workspace);
+    }
 }
 
 function addToPrePreBlocksDataFiles(arg: any) {
