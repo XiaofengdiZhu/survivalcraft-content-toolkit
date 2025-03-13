@@ -16,7 +16,7 @@ export function initeBlocksDataCommands(subscriptions: vscode.Disposable[]) {
     const quickSuggestions: QuickSuggestions = config1.get("quickSuggestions") ?? {};
     if (quickSuggestions.strings === "off") {
         quickSuggestions.strings = "on";
-        config1.update("quickSuggestions", quickSuggestions, vscode.ConfigurationTarget.Workspace);
+        config1.update("quickSuggestions", quickSuggestions, vscode.ConfigurationTarget.Global);
     }
 }
 

@@ -233,6 +233,7 @@ class DatabaseCompletionItemProvider implements vscode.CompletionItemProvider {
                     }
                 }
             }
+            return results;
         }
         wordRange = document.getWordRangeAtPosition(position, attributeNamePattern);
         if (wordRange) {

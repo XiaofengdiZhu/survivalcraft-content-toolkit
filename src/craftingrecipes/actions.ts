@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { isCraftingRecipesFile } from './diagnostics';
 import { replaceRootElementToMod, setXsd } from '../actions';
-import { allLanguages, getPreferedLanguage, languageName2Native } from '../common/languageDiagnostics';
+import { getPreferedLanguage } from '../common/languageDiagnostics';
 import { craftingId2ClassName } from '../blocksdata/diagnostics';
 
 export function initeCraftingRecipesActions(subscriptions: vscode.Disposable[]) {
@@ -46,6 +46,8 @@ class CraftingRecipesActionProvider implements vscode.CodeActionProvider {
 const craftingRecipeTagPattern = /<Recipe.*?>/;
 const ingredientPattern = / ([a-z])="(\S+)"/g;
 const craftingRecipeRowPattern = /^[ \t]*"([a-z ]*)"$/;
+const resultHeadPattern = / (?:Result|Remains)="[^"]*"/;
+const ingredientHeadPattern = / [a-z]="[^"]*"/;
 
 class CraftingRecipesCompletionItemProvider implements vscode.CompletionItemProvider {
     provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
@@ -53,78 +55,115 @@ class CraftingRecipesCompletionItemProvider implements vscode.CompletionItemProv
         if (!isCraftingRecipesFile(document.fileName)) {
             return results;
         }
-        const wordRange = document.getWordRangeAtPosition(position, craftingRecipeRowPattern);
-        if (!wordRange) {
-            return results;
-        }
-        for (let line = position.line - 1; line > 0; line--) {
-            const lineString = document.lineAt(line).text;
-            craftingRecipeTagPattern.lastIndex = 0;
-            if (craftingRecipeTagPattern.test(lineString)) {
-                const ingredients = new Map<string, string>();
-                const preferedLanguage = getPreferedLanguage();
-                ingredientPattern.lastIndex = 0;
-                let match;
-                while ((match = ingredientPattern.exec(lineString)) !== null && match.index !== undefined) {
-                    const ingredient = match[2];
-                    let temp: string;
-                    if (preferedLanguage) {
-                        const array = ingredient.split(":");
-                        const ingredientClassName = craftingId2ClassName.get(array[0]);
-                        if (ingredientClassName) {
-                            const fullIngredient = `${ingredientClassName}:${array[1] ?? "0"}`;
-                            temp = preferedLanguage.Blocks?.[fullIngredient]?.DisplayName ?? ingredient;
+        const preferedLanguage = getPreferedLanguage();
+        let wordRange = document.getWordRangeAtPosition(position, craftingRecipeRowPattern);
+        if (wordRange) {
+            for (let line = position.line - 1; line > 0; line--) {
+                const lineString = document.lineAt(line).text;
+                craftingRecipeTagPattern.lastIndex = 0;
+                if (craftingRecipeTagPattern.test(lineString)) {
+                    const ingredients = new Map<string, string>();
+                    ingredientPattern.lastIndex = 0;
+                    let match;
+                    while ((match = ingredientPattern.exec(lineString)) !== null && match.index !== undefined) {
+                        const ingredient = match[2];
+                        let temp: string;
+                        if (preferedLanguage) {
+                            const array = ingredient.split(":");
+                            const ingredientClassName = craftingId2ClassName.get(array[0]);
+                            if (ingredientClassName) {
+                                const fullIngredient = `${ingredientClassName}:${array[1] ?? "0"}`;
+                                temp = preferedLanguage.Blocks?.[fullIngredient]?.DisplayName ?? ingredient;
+                            } else {
+                                temp = ingredient;
+                            }
                         } else {
                             temp = ingredient;
                         }
-                    } else {
-                        temp = ingredient;
+                        ingredients.set(match[1], temp);
                     }
-                    ingredients.set(match[1], temp);
-                }
-                if (ingredients.size === 0) {
-                    break;
-                }
-                const wordRange1 = document.getWordRangeAtPosition(position);
-                const charsBeforePosition = wordRange1 ? document.getText(wordRange1) : "";
-                let baseDescription: string = "";
-                if (wordRange1) {
-                    for (let i = 0; i < charsBeforePosition.length; i++) {
-                        baseDescription = `${baseDescription}${ingredients.get(charsBeforePosition[i]) ?? vscode.l10n.t("notFound")}, `;
+                    if (ingredients.size === 0) {
+                        break;
                     }
-                }
-                ingredients.set(" ", "□");
-                let index = 1;
-                for (const [key, value] of ingredients) {
-                    if (key !== " ") {
-                        const result = new vscode.CompletionItem({ label: `${wordRange1 ? charsBeforePosition : ""}${key}`, description: `${baseDescription}${value}` }, vscode.CompletionItemKind.Text);
-                        result.sortText = index.toString().padStart(6, "0");
-                        results.push(result);
+                    const wordRange1 = document.getWordRangeAtPosition(position);
+                    const charsBeforePosition = wordRange1 ? document.getText(wordRange1) : "";
+                    let baseDescription: string = "";
+                    if (wordRange1) {
+                        for (let i = 0; i < charsBeforePosition.length; i++) {
+                            baseDescription = `${baseDescription}${ingredients.get(charsBeforePosition[i]) ?? vscode.l10n.t("notFound")}, `;
+                        }
                     }
-                    let index1 = 1;
-                    for (const [key1, value1] of ingredients) {
-                        if (key1 !== " ") {
-                            const result = new vscode.CompletionItem({ label: `${charsBeforePosition}${key}${key1}`, description: `${baseDescription}${value}, ${value1}` }, vscode.CompletionItemKind.Text);
-                            result.sortText = (index * 100 + index1).toString().padStart(6, "0");
+                    ingredients.set(" ", "□");
+                    let index = 1;
+                    for (const [key, value] of ingredients) {
+                        if (key !== " ") {
+                            const result = new vscode.CompletionItem({ label: `${wordRange1 ? charsBeforePosition : ""}${key}`, description: `${baseDescription}${value}` }, vscode.CompletionItemKind.Text);
+                            result.sortText = index.toString().padStart(6, "0");
                             results.push(result);
                         }
-                        let index2 = 1;
-                        for (const [key2, value2] of ingredients) {
-                            if (key2 !== " ") {
-                                const result = new vscode.CompletionItem({ label: `${charsBeforePosition}${key}${key1}${key2}`, description: `${baseDescription}${value}, ${value1}, ${value2}` }, vscode.CompletionItemKind.Text);
-                                result.sortText = (index * 10000 + index1 * 100 + index2).toString().padStart(6, "0");
+                        let index1 = 1;
+                        for (const [key1, value1] of ingredients) {
+                            if (key1 !== " ") {
+                                const result = new vscode.CompletionItem({ label: `${charsBeforePosition}${key}${key1}`, description: `${baseDescription}${value}, ${value1}` }, vscode.CompletionItemKind.Text);
+                                result.sortText = (index * 100 + index1).toString().padStart(6, "0");
                                 results.push(result);
                             }
-                            index2++;
+                            let index2 = 1;
+                            for (const [key2, value2] of ingredients) {
+                                if (key2 !== " ") {
+                                    const result = new vscode.CompletionItem({ label: `${charsBeforePosition}${key}${key1}${key2}`, description: `${baseDescription}${value}, ${value1}, ${value2}` }, vscode.CompletionItemKind.Text);
+                                    result.sortText = (index * 10000 + index1 * 100 + index2).toString().padStart(6, "0");
+                                    results.push(result);
+                                }
+                                index2++;
+                            }
+                            index1++;
                         }
-                        index1++;
+                        index++;
                     }
-                    index++;
+                    break;
                 }
-                break;
+                if (!craftingRecipeRowPattern.test(lineString)) {
+                    break;
+                }
             }
-            if (!craftingRecipeRowPattern.test(lineString)) {
-                break;
+            return results;
+        }
+        wordRange = document.getWordRangeAtPosition(position, resultHeadPattern);
+        if (wordRange) {
+            const match = document.getText(wordRange).match(resultHeadPattern);
+            if (match !== null && match.index !== undefined) {
+                const addedLabels: string[] = [];
+                for (const [craftingId, className] of craftingId2ClassName) {
+                    if (!addedLabels.includes(className)) {
+                        addedLabels.push(className);
+                        let translated: string | undefined;
+                        if (preferedLanguage) {
+                            translated = preferedLanguage.Blocks?.[`${className}:0`]?.DisplayName;
+                        }
+                        const completionItem: vscode.CompletionItem = new vscode.CompletionItem({ label: className, description: translated }, vscode.CompletionItemKind.Value);
+                        results.push(completionItem);
+                    }
+                }
+            }
+            return results;
+        }
+        wordRange = document.getWordRangeAtPosition(position, ingredientHeadPattern);
+        if (wordRange) {
+            const match = document.getText(wordRange).match(ingredientHeadPattern);
+            if (match !== null && match.index !== undefined) {
+                const addedLabels: string[] = [];
+                for (const [craftingId, className] of craftingId2ClassName) {
+                    if (!addedLabels.includes(craftingId)) {
+                        addedLabels.push(craftingId);
+                        let translated: string | undefined;
+                        if (preferedLanguage) {
+                            translated = preferedLanguage.Blocks?.[`${className}:0`]?.DisplayName;
+                        }
+                        const completionItem: vscode.CompletionItem = new vscode.CompletionItem({ label: craftingId, description: translated }, vscode.CompletionItemKind.Value);
+                        results.push(completionItem);
+                    }
+                }
             }
         }
         return results;

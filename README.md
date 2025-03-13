@@ -60,13 +60,15 @@ Only suggests to set the root element as below
 # CraftingRecipes 合成表
 
 * When you hover over the pattern of a crafting recipe, you will see a preview of this recipe.  
-把鼠标悬停在合成配方的模板上，你将看到这个配方的预览  
-![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/preview_of_crafting_recipe.webp)
+  把鼠标悬停在合成配方的模板上，你将看到这个配方的预览  
+  ![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/preview_of_crafting_recipe.webp)
 * When you edit the pattern of a crafting recipe, there will be code completion proposals.  
-当你编辑合成配方的图案时，会有代码补全提示  
-![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/code_completion_proposals_for_CraftingRecipes.webp)
+  当你编辑合成配方的图案时，会有代码补全提示  
+  ![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/code_completion_proposals_for_CraftingRecipes.webp)  
+  Of cource, the result, remains, ingredients of a crafting recipe also have code completion proposals.  
+  当然，合成配方的结果、剩余和原料也拥有代码补全提示
 * Suggests to set the root element as below  
-提示设置根元素为
+  提示设置根元素为
 ```xml
 <Mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/CraftingRecipes.xsd">
 ```
