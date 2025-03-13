@@ -83,7 +83,7 @@ class GuidHoverProvider implements vscode.HoverProvider {
             if (tags && tags.length > 0) {
                 const lines: string[] = [];
                 for (const tag of tags) {
-                    lines.push(generateTagHtml(tag));
+                    lines.push(generateTagLinkHtml(tag));
                 }
                 const markdownString = new vscode.MarkdownString(vscode.l10n.t("actions.guidReferencedBy") + lines.join('\n\n'));
                 markdownString.isTrusted = true;
@@ -159,7 +159,7 @@ function generateGuidDefinitionHover(guid: string, range: vscode.Range): vscode.
     if (tags && tags.length > 0) {
         const lines: string[] = [];
         for (const tag of tags) {
-            lines.push(generateTagHtml(tag));
+            lines.push(generateTagLinkHtml(tag));
         }
         const markdownString = new vscode.MarkdownString(vscode.l10n.t("actions.guidDefinedAt") + lines.join('\n\n'));
         markdownString.isTrusted = true;
@@ -190,7 +190,7 @@ function sortTags(tags: TagInfo[], fsPath: string, preposedDatabaseFiles: string
     return tags.toSorted((a, b) => a.range.start.line - b.range.start.line - (a.uri.fsPath === fsPath && b.uri.fsPath !== fsPath ? 30000 : 0) - (a.uri.fsPath.endsWith('Database.xml') && !b.uri.fsPath.endsWith('Database.xml') ? 20000 : 0) - (preposedDatabaseFiles.includes(a.uri.fsPath) && !preposedDatabaseFiles.includes(b.uri.fsPath) ? 10000 : 0));
 }
 
-function generateTagHtml(tag: TagInfo) {
+function generateTagLinkHtml(tag: TagInfo, needTail: boolean = true) {
     const args = [
         tag.uri.toString(),
         tag.range.start.line,
@@ -199,7 +199,8 @@ function generateTagHtml(tag: TagInfo) {
         tag.range.end.character
     ];
     const fileName = tag.uri.fsPath.split('\\').pop() || tag.uri.fsPath.split('/').pop();
-    return `[${fileName}#${tag.range.start.line + 1}:${tag.range.start.character + 1}](command:survivalcraft-content-toolkit.openFile?${encodeURIComponent(JSON.stringify(args))}) (${vscode.l10n.t("main.tagTitle")}: \`${tag.tagName}\` ${vscode.l10n.t("main.nameTitle")}: \`${tag.name ?? "/"}\`)`;
+    const link = `[${fileName}#${tag.range.start.line + 1}:${tag.range.start.character + 1}](command:survivalcraft-content-toolkit.openFile?${encodeURIComponent(JSON.stringify(args))})`;
+    return needTail ? `${link} (${vscode.l10n.t("main.tagTitle")}: \`${tag.tagName}\` ${vscode.l10n.t("main.nameTitle")}: \`${tag.name ?? "/"}\`)` : link;
 }
 
 const attributeNamePattern = /<(\w+).*? Name="[^"]*"/;
@@ -223,7 +224,9 @@ class DatabaseCompletionItemProvider implements vscode.CompletionItemProvider {
                             if (allowParentTagName.includes(tagInfo.tagName)) {
                                 const completionItem: vscode.CompletionItem = new vscode.CompletionItem(`<${tagInfo.tagName}${tagInfo.name ? ` Name="${tagInfo.name}"` : ` Guid="${guid}"`}>`, vscode.CompletionItemKind.Value);
                                 completionItem.insertText = guid;
-                                completionItem.documentation = new vscode.MarkdownString(`\`${guid}\``);
+                                const markdown = new vscode.MarkdownString(`\`${guid}\`  \n${generateTagLinkHtml(tagInfo, false)}`);
+                                markdown.isTrusted = true;
+                                completionItem.documentation = markdown;
                                 if (tagInfo.name === attributeName) {
                                     completionItem.preselect = true;
                                 }
