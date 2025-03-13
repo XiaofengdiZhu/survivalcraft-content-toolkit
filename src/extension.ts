@@ -1,21 +1,20 @@
 import * as vscode from 'vscode';
-import { initeDatabaseActions } from './database/actions';
-import { initeDatabaseCommands } from './database/commands';
 import { initeDiagnostics } from './diagnostics';
-import { initeCommonCommands } from './common/commands';
-import { initeCommonActions } from './common/actions';
 import { languageFileWatchers } from './common/languageDiagnostics';
-import { initeClothesActions } from './clothes/actions';
 import { initeActions } from './actions';
+import { initeCommands } from './commands';
+import { blocksDataFileWatchers } from './blocksdata/diagnostics';
 export function activate(context: vscode.ExtensionContext) {
-	initeCommonCommands(context.subscriptions);
-	initeDatabaseCommands(context.subscriptions);
+	initeCommands(context);
 	initeDiagnostics(context);
 	initeActions(context);
 }
 
 export function deactivate() {
 	languageFileWatchers.forEach(watcher => {
+		watcher.close();
+	});
+	blocksDataFileWatchers.forEach(watcher => {
 		watcher.close();
 	});
 }

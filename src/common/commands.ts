@@ -16,12 +16,12 @@ function addToPrePreLanguageFiles(arg: any) {
         let files: string[] = config.get('preposedLanguageFiles') ?? [];
         if (files) {
             if (files.includes(arg.fsPath)) {
-                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreLanguageFiles", arg.fsPath));
+                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.language")));
             } else {
                 files.push(arg.fsPath);
                 vscode.workspace.getConfiguration('survivalcraft-content-toolkit').update('preposedLanguageFiles', files, vscode.ConfigurationTarget.Global);
                 vscode.commands.executeCommand('setContext', 'sct.preposedLanguageFiles', files);
-                vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreLanguageFiles", arg.fsPath));
+                vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreFiles", vscode.l10n.t("main.language")));
                 readAndWatchLanguageFile(arg.fsPath);
             }
         }
@@ -36,7 +36,7 @@ function removeFromPrePreLanguageFiles(arg: any) {
             files = files.filter(file => file !== arg.fsPath);
             config.update('preposedLanguageFiles', files, vscode.ConfigurationTarget.Global);
             vscode.commands.executeCommand('setContext', 'sct.preposedLanguageFiles', files);
-            vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreLanguageFiles", arg.fsPath));
+            vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreFiles", vscode.l10n.t("main.language")));
             closeLanguageDiagnostics(arg.fsPath, false);
         }
     }

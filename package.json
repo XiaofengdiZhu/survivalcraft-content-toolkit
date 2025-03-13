@@ -2,7 +2,11 @@
   "name": "survivalcraft-content-toolkit",
   "displayName": "%main.displayName%",
   "description": "%main.description%",
-  "version": "0.2.0",
+  "keywords": [
+    "Survivalcraft",
+    "生存战争"
+  ],
+  "version": "0.3.0",
   "icon": "icon.png",
   "author": {
     "name": "XiaofengdiZhu 销锋镝铸",
@@ -62,9 +66,19 @@
         "title": "%commands.removeFromPreLanguageFiles.title%"
       },
       {
+        "command": "survivalcraft-content-toolkit.addToPreBlocksDataFiles",
+        "when": "resourceExtname == .csv || resourceFilename == BlocksData.txt",
+        "title": "%commands.addToPreBlocksDataFiles.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
+        "when": "resourceExtname == .csv || resourceFilename == BlocksData.txt",
+        "title": "%commands.removeFromPreBlocksDataFiles.title%"
+      },
+      {
         "command": "survivalcraft-content-toolkit.openFile",
         "when": "false",
-        "title": "打开文件"
+        "title": "%%commands.openFile.title%"
       }
     ],
     "menus": {
@@ -98,6 +112,16 @@
           "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
           "when": "resourcePath in sct.preposedLanguageFiles",
           "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreBlocksDataFiles",
+          "when": "resourcePath not in sct.preposedBlocksDataFiles && (resourceExtname == .csv || resourceFilename == BlocksData.txt)",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
+          "when": "resourcePath in sct.preposedBlocksDataFiles",
+          "group": "1_modification@1.01"
         }
       ],
       "explorer/context": [
@@ -119,6 +143,16 @@
         {
           "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
           "when": "resourcePath in sct.preposedLanguageFiles",
+          "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreBlocksDataFiles",
+          "when": "resourcePath not in sct.preposedBlocksDataFiles && (resourceExtname == .csv || resourceFilename == BlocksData.txt)",
+          "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
+          "when": "resourcePath in sct.preposedBlocksDataFiles",
           "group": "2_workspace"
         }
       ],
@@ -148,6 +182,16 @@
         {
           "command": "survivalcraft-content-toolkit.removeFromPreLanguageFiles",
           "when": "resourcePath in sct.preposedLanguageFiles",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToPreBlocksDataFiles",
+          "when": "resourcePath not in sct.preposedBlocksDataFiles && (resourceExtname == .csv || resourceFilename == BlocksData.txt)",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
+          "when": "resourcePath in sct.preposedBlocksDataFiles",
           "group": "navigation"
         }
       ]
@@ -194,7 +238,16 @@
         "survivalcraft-content-toolkit.defaultCraftingRecipesXsdPath": {
           "type": "string",
           "default": "https://gitee.com/SC-SPM/SurvivalcraftApi/raw/SCAPI1.8/Survivalcraft/Content/Assets/CraftingRecipes.xsd",
-          "markdownDescription": "%configurations.defaultClothesXsdPath.description%",
+          "markdownDescription": "%configurations.defaultCraftingRecipesXsdPath.description%",
+          "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.preposedBlocksDataFiles": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%configurations.preposedBlocksDataFiles.description%",
           "scope": "machine"
         }
       }
@@ -206,6 +259,12 @@
           ".xdb",
           ".clo",
           ".cr"
+        ]
+      },
+      {
+        "id": "csv",
+        "filenames": [
+          "Blocksdata.txt"
         ]
       }
     ]

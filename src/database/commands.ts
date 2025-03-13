@@ -29,12 +29,12 @@ function addToPreDatabaseFiles(arg: any) {
         let files: string[] = config.get('preposedDatabaseFiles') ?? [];
         if (files) {
             if (files.includes(arg.fsPath)) {
-                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreDatabaseFiles", arg.fsPath));
+                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.database")));
             } else {
                 files.push(arg.fsPath);
                 config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
                 vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
-                vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreDatabaseFiles", arg.fsPath));
+                vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreFiles", vscode.l10n.t("main.database")));
                 if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
                     vscode.workspace.openTextDocument(arg.fsPath);
                 }
@@ -51,7 +51,7 @@ function removeFromPreDatabaseFiles(arg: any) {
             files = files.filter(file => file !== arg.fsPath);
             config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
             vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
-            vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreDatabaseFiles", arg.fsPath));
+            vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreFiles", vscode.l10n.t("main.database")));
             if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
                 removeFromPreDatabaseFiles(arg.fsPath);
             }
@@ -67,7 +67,7 @@ function insertClipboardWithRandomizedGuids() {
         if (!editor || clipboard.length === 0) {
             return;
         }
-        if(clipboard.search(tagWithGuidPattern) === -1){
+        if (clipboard.search(tagWithGuidPattern) === -1) {
             vscode.window.showWarningMessage(vscode.l10n.t("messages.clipboardNotContainsTagWithGuid"));
             return;
         }

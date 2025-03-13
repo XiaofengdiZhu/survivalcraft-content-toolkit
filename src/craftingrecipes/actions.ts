@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { isCraftingRecipesFile } from './diagnostics';
 import { replaceRootElementToMod, setXsd } from '../actions';
 import { allLanguages, getPreferedLanguage, languageName2Native } from '../common/languageDiagnostics';
+import { craftingId2ClassName } from '../blocksdata/diagnostics';
 
 export function initeCraftingRecipesActions(subscriptions: vscode.Disposable[]) {
     subscriptions.push(vscode.languages.registerCodeActionsProvider("xml", new CraftingRecipesActionProvider(), {
@@ -61,10 +62,25 @@ class CraftingRecipesCompletionItemProvider implements vscode.CompletionItemProv
             craftingRecipeTagPattern.lastIndex = 0;
             if (craftingRecipeTagPattern.test(lineString)) {
                 const ingredients = new Map<string, string>();
+                const preferedLanguage = getPreferedLanguage();
                 ingredientPattern.lastIndex = 0;
                 let match;
                 while ((match = ingredientPattern.exec(lineString)) !== null && match.index !== undefined) {
-                    ingredients.set(match[1], match[2]);
+                    const ingredient = match[2];
+                    let temp: string;
+                    if (preferedLanguage) {
+                        const array = ingredient.split(":");
+                        const ingredientClassName = craftingId2ClassName.get(array[0]);
+                        if (ingredientClassName) {
+                            const fullIngredient = `${ingredientClassName}:${array[1] ?? "0"}`;
+                            temp = preferedLanguage.Blocks?.[fullIngredient]?.DisplayName ?? ingredient;
+                        } else {
+                            temp = ingredient;
+                        }
+                    } else {
+                        temp = ingredient;
+                    }
+                    ingredients.set(match[1], temp);
                 }
                 if (ingredients.size === 0) {
                     break;
@@ -77,7 +93,7 @@ class CraftingRecipesCompletionItemProvider implements vscode.CompletionItemProv
                         baseDescription = `${baseDescription}${ingredients.get(charsBeforePosition[i]) ?? vscode.l10n.t("notFound")}, `;
                     }
                 }
-                ingredients.set(" ", " ");
+                ingredients.set(" ", "□");
                 let index = 1;
                 for (const [key, value] of ingredients) {
                     if (key !== " ") {
@@ -136,18 +152,15 @@ class CraftingRecipe {
             return null;
         }
         let markdown = "";
+        const preferedLanguage = getPreferedLanguage();
         let resultTranslated: string | undefined;
         if (this.result) {
             const array = this.result.split(":");
             const fullResult = `${array[0]}:${array[1] ?? "0"}`;
             resultTranslated = getPreferedLanguage()?.Blocks?.[fullResult]?.DisplayName;
             if (this.description) {
-                if (this.description.startsWith("[") && this.description.endsWith("]")) {
-                    let descriptionLines: string[] = [];
-                    for (const [name, language] of allLanguages) {
-                        descriptionLines.push(`${language.Blocks?.[fullResult]?.[`CRDescription:${this.description.slice(1, -1)}`] ?? vscode.l10n.t("actions.emptyString")} \`${languageName2Native.get(name)}\``);
-                    }
-                    markdown = `${descriptionLines.join('\n\n')}\n\n`;
+                if (this.description.startsWith("[") && this.description.endsWith("]") && preferedLanguage) {
+                    markdown = `${preferedLanguage?.Blocks?.[fullResult]?.[`CRDescription:${this.description.slice(1, -1)}`] ?? vscode.l10n.t("actions.emptyString")}\n\n`;
                 } else {
                     markdown = `${this.description}\n\n`;
                 }
@@ -168,19 +181,41 @@ class CraftingRecipe {
         let remainsTranslated: string | undefined;
         if (this.remains) {
             const array = this.remains.split(":");
-            remainsTranslated = getPreferedLanguage()?.Blocks?.[`${array[0]}:${array[1] ?? "0"}`]?.DisplayName;
+            remainsTranslated = preferedLanguage?.Blocks?.[`${array[0]}:${array[1] ?? "0"}`]?.DisplayName;
         }
         const remainsString = this.remains ? `|${remainsTranslated ?? this.remains}|×${this.remainsCount ?? 0}|` : emptyEndString;
         for (let row = 0; row < this.pattern.length; row++) {
-            markdown += "\n|\\|";
+            markdown += "\n|";
             const rowString = this.pattern[row];
             for (let i = 0; i < rowString.length; i++) {
+                let temp: string;
                 const char = rowString[i];
-                markdown += ` ${char === " " ? "□" : this.ingredients.get(char) ?? "∅"} \\||`;
+                if (char === " ") {
+                    temp = "□";
+                } else {
+                    const ingredient = this.ingredients.get(char);
+                    if (ingredient) {
+                        if (preferedLanguage) {
+                            const array = ingredient.split(":");
+                            const ingredientClassName = craftingId2ClassName.get(array[0]);
+                            if (ingredientClassName) {
+                                const fullIngredient = `${ingredientClassName}:${array[1] ?? "0"}`;
+                                temp = preferedLanguage.Blocks?.[fullIngredient]?.DisplayName ?? ingredient;
+                            } else {
+                                temp = ingredient;
+                            }
+                        } else {
+                            temp = ingredient;
+                        }
+                    } else {
+                        temp = "∅";
+                    }
+                }
+                markdown += ` ${temp} |`;
             }
             const emptyLength = this.maxColumnOfPattern - rowString.length;
             if (emptyLength > 0) {
-                markdown += " □ \\||".repeat(emptyLength);
+                markdown += " □ |".repeat(emptyLength);
             }
             if (this.pattern.length <= 2) {
                 if (row === 0) {

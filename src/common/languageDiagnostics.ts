@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-class Language {
+class LanguageFile {
     languageName: string;
     content: any;
     constructor(languageName: string, content: any) {
@@ -11,7 +11,7 @@ class Language {
 }
 
 export const languageFileWatchers = new Map<string, fs.FSWatcher>();
-const originalLanguageFiles = new Map<string, Language>();
+const originalLanguageFiles = new Map<string, LanguageFile>();
 export const allLanguages = new Map<string, any>();
 export const languageName2Native = new Map<string, string>();
 
@@ -37,7 +37,7 @@ export function updateLanguageDiagnostics(fileName: string, content: string) {
         return;
     }
     const languageName = removeStringsFromLanguageFile(fileName);
-    originalLanguageFiles.set(fileName, new Language(languageName, originalJson));
+    originalLanguageFiles.set(fileName, new LanguageFile(languageName, originalJson));
     let result: any = {};
     for (const [fsPath, language] of originalLanguageFiles) {
         if (language.languageName === languageName) {

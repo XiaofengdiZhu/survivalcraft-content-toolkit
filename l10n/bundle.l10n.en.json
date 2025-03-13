@@ -1,6 +1,10 @@
 {
     "main.tagTitle": "Tag",
     "main.nameTitle": "Name",
+    "main.invalid": "Invalid",
+    "main.database": "Database",
+    "main.language": "Language",
+    "main.blocksData": "BlocksData",
     "diagnostics.duplicateGuidFound.message": "Duplicate GUID \"{0}\" found:",
     "diagnostics.duplicateGuidFound.relatedInformation": "Duplicate with this",
     "diagnostics.inheritanceParentNotFound": "Required database object with GUID \"{0}\" not found",
@@ -11,6 +15,7 @@
     "diagnostics.cannotLoadPreLanguage": "Cannot load SCT preposed language file: {0}\n\nError: {1}",
     "diagnostics.noNativeLanguageName": "Cannot find the native name of language {0}",
     "diagnostics.ingredientNotSet": "The ingredient \"{0}\" is not set",
+    "diagnostics.cannotLoadPreBlocksData": "Cannot load SCT preposed blocksdata file: {0}\n\nError: {1}",
     "actions.replaceWithRandomGuid": "Replace the duplicate GUID with a new random GUID",
     "actions.replaceRootElementToMod": "Replace the root element to the recomanded element \"Mod\"",
     "actions.guidDefinedAt": "This GUID is defined at:\n\n",
@@ -20,11 +25,8 @@
     "actions.notFound": "(Not Found)",
     "actions.requiredHeatLevel": "Required Heat Level",
     "actions.requiredPlayerLevel": "Required Player Level",
-    "messages.alreadyInPreDatabaseFiles": "The file is already in the SCT preposed database files",
-    "messages.addedToPreDatabaseFiles": "The file is successfully added to the SCT preposed database files",
-    "messages.removedFromPreDatabaseFiles": "The file is successfully removed from the SCT preposed database files",
-    "messages.alreadyInPreLanguageFiles": "The file is already in the SCT preposed language files",
-    "messages.addedToPreLanguageFiles": "The file is successfully added to the SCT preposed language files",
-    "messages.removedFromPreLanguageFiles": "The file is successfully removed from the SCT preposed language files",
+    "messages.alreadyInPreFiles": "This file is already in the SCT preposed {0} files",
+    "messages.addedToPreFiles": "Successfully added to the SCT preposed {0} files",
+    "messages.removedFromPreFiles": "Successfully removed from the SCT preposed {0} files",
     "messages.clipboardNotContainsTagWithGuid": "The clipboard does not contain a tag with GUID"
 }

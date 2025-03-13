@@ -4,6 +4,7 @@ import { initeLanguageDiagnostics } from './common/languageDiagnostics';
 import { initeColorDecoration } from './common/colorDecoration';
 import { initeClothesDiagnostics, isClothesFile, updateClothesDiagnostics } from './clothes/diagnostics';
 import { initeCraftingRecipesDiagnostics, isCraftingRecipesFile, updateCraftingRecipesDiagnostics } from './craftingrecipes/diagnostics';
+import { initeBlocksDataDiagnostics } from './blocksdata/diagnostics';
 
 let diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -16,6 +17,7 @@ export function initeDiagnostics(context: vscode.ExtensionContext) {
 
     initeColorDecoration(context.subscriptions);
     initeLanguageDiagnostics();
+    initeBlocksDataDiagnostics();
     initeDatabaseDiagnostics(diagnosticCollection);
     initeClothesDiagnostics(diagnosticCollection);
     initeCraftingRecipesDiagnostics(diagnosticCollection);

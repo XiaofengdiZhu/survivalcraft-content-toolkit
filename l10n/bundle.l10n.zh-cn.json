@@ -1,6 +1,10 @@
 {
     "main.tagTitle": "标签",
     "main.nameTitle": "名称",
+    "main.invalid": "无效的",
+    "main.database": "数据库",
+    "main.language": "语言",
+    "main.blocksData": "方块表",
     "diagnostics.duplicateGuidFound.message": "发现重复 GUID \"{0}\":",
     "diagnostics.duplicateGuidFound.relatedInformation": "与此重复",
     "diagnostics.inheritanceParentNotFound": "GUID 为 \"{0}\" 的数据库对象未找到",
@@ -11,6 +15,7 @@
     "diagnostics.cannotLoadPreLanguage": "无法加载 SCT 前置语言文件: {0}\n\n错误: {1}",
     "diagnostics.noNativeLanguageName": "语言 {0} 未找到其原生名称",
     "diagnostics.ingredientNotSet": "原料 \"{0}\" 未指定",
+    "diagnostics.cannotLoadPreBlocksData": "无法加载 SCT 前置方块表文件: {0}\n\n错误: {1}",
     "actions.replaceWithRandomGuid": "将该重复 GUID 替换为一个随机 GUID",
     "actions.replaceRootElementToMod": "将根元素替换为推荐元素 \"Mod\"",
     "actions.guidDefinedAt": "这个 GUID 定义于:\n\n",
@@ -20,11 +25,8 @@
     "actions.notFound": "(未找到)",
     "actions.requiredHeatLevel": "需求热等级",
     "actions.requiredPlayerLevel": "需求玩家等级",
-    "messages.alreadyInPreDatabaseFiles": "该文件此前已添加到 SCT 前置数据库中",
-    "messages.addedToPreDatabaseFiles": "该文件已成功添加到 SCT 前置数据库中",
-    "messages.removedFromPreDatabaseFiles": "该文件已成功从 SCT 前置数据库中移除",
-    "messages.alreadyInPreLanguageFiles": "该文件此前已添加到 SCT 前置语言文件中",
-    "messages.addedToPreLanguageFiles": "该文件已成功添加到 SCT 前置语言文件中",
-    "messages.removedFromPreLanguageFiles": "该文件已成功从 SCT 前置语言文件中移除",
+    "messages.alreadyInPreFiles": "该文件此前已添加到 SCT 前置{0}文件中",
+    "messages.addedToPreFiles": "该文件已成功添加到 SCT 前置{0}文件中",
+    "messages.removedFromPreFiles": "该文件已成功从 SCT 前置{0}文件中移除",
     "messages.clipboardNotContainsTagWithGuid": "剪贴板中不包含带 GUID 的标签"
 }
