@@ -9,11 +9,16 @@
     "commands.removeFromPreLanguageFiles.title": "从 SCT 前置语言中移除该文件",
     "commands.addToPreBlocksDataFiles.title": "添加该文件到 SCT 前置方块表",
     "commands.removeFromPreBlocksDataFiles.title": "从 SCT 前置方块表中移除该文件",
+    "commands.addToContentDirectories.title": "添加该目录到 SCT 内容目录",
+    "commands.removeFromContentDirectories.title": "从 SCT 内容目录中移除该目录",
     "commands.openFile.title": "打开文件",
+    "commands.previewWidget.start.title": "预览部件 (SCT)",
+    "commands.previewWidget.inspect.title": "检查",
     "configurations.preposedLanguageFiles.description": "### 前置语言文件\n\n该扩展将预先按顺序从以下语言文件读取字符串。\n\n例如将完整的`zh-CN.json`加入该列表后，当鼠标悬停在`\"[MainMenuScreen:2]\"`上时，将显示`游戏 (中文)`。你可以在`*.json`文件上右键来添加",
     "configurations.defaultDatabaseXsdPath.description": "### 默认 Database.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值",
     "configurations.preposedDatabaseFiles.description": "### 前置数据库文件\n\n该扩展将预先按顺序从以下数据库文件读取其中的 GUID。\n\n你可以在`Database.xml`和`*.xdb`文件上右键来添加",
     "configurations.defaultClothesXsdPath.description": "### 默认 Clothes.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值",
     "configurations.defaultCraftingRecipesXsdPath.description": "### 默认 CraftingRecipes.xsd 路径\n\n当根元素未设置 XSD 时，你可以在快速修复中设置它为该默认值",
-    "configurations.preposedBlocksDataFiles.description": "### 前置方块表文件\n\n该扩展将预先按顺序从以下方块表文件读取其中的合成标识 (CraftingId)。\n\n这是为了显示合成表中原料的翻译。\n\n你可以在`BlocksData.txt`和`*.csv`文件上右键来添加"
+    "configurations.preposedBlocksDataFiles.description": "### 前置方块表文件\n\n该扩展将预先按顺序从以下方块表文件读取其中的合成标识 (CraftingId)。\n\n这是为了显示合成表中原料的翻译。\n\n你可以在`BlocksData.txt`和`*.csv`文件上右键来添加",
+    "configurations.contentDirectories.description": "### 内容目录\n\n该扩展将从指定的这些目录读取图片等资源文件。\n\n你可以在任意文件夹上右键来添加，在添加时会扫描其中的文件，如果检测到数据库、方块表、语言文件，会将它们添加到对应的前置列表中。\n\n从此处移除文件夹时，不要忘记移除对应的前置列表中的文件"
 }

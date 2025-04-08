@@ -47,7 +47,7 @@ export function updateBlocksDataDiagnostics(fileName: string, content: string) {
     }
     originalBlocksDataFiles.set(fileName, map);
     let result = new Map<string, string>();
-    for (const [fsPath, blocksData] of originalBlocksDataFiles) {
+    for (const [_fsPath, blocksData] of originalBlocksDataFiles) {
         for (const [craftingId, className] of blocksData) {
             result.set(craftingId, className);
         }

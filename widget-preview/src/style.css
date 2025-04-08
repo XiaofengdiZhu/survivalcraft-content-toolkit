@@ -1,0 +1,139 @@
+:root, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-foreground);
+    overflow: hidden;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+#configurationArea {
+    margin: 20px 20px 0 20px;
+    display: flex;
+    justify-content: stretch;
+    gap: 24px;
+}
+
+.configurationItem {
+    display: flex;
+    gap: 8px;
+
+}
+
+#previewArea {
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+#previewContainer {
+    position: absolute;
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 95%;
+    max-height: 95%;
+    width: min(80%, 850px);
+    height: min(80%, 479px);
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    box-sizing: border-box;
+    resize: both;
+    overflow: hidden;
+    border-radius: 8px 8px 24px 8px;
+    box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .2), 0 6px 10px 0 rgba(0, 0, 0, .14), 0 1px 18px 0 rgba(0, 0, 0, .12);
+    font-family: "微软雅黑 Pericles", system-ui;
+    writing-mode: horizontal-tb;
+    background-color: black;
+    color: white;
+    font-size: 19px;
+    line-height: 25.5px;
+    letter-spacing: 0;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+    text-wrap: nowrap;
+}
+
+.beingInspected {
+    outline: var(--vscode-focusBorder) 2px solid;
+    outline-offset: 2px;
+}
+
+.floating {
+    box-sizing: border-box;
+    position: absolute;
+    background: var(--vscode-editorHoverWidget-background);
+    color: var(--vscode-editorHoverWidget-foreground);
+    padding: 8px;
+    border: var(--vscode-editorHoverWidget-border) 1.5px solid;
+    border-radius: 2px;
+    font-size: 14px;
+    font-family: system-ui;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+
+    & h3 {
+        margin-block-start: 0;
+        margin-block-end: 8px;
+        margin-left: 9px;
+    }
+}
+
+.floatingTableContainer {
+    position: relative;
+    overflow: auto;
+    display: flex;
+    gap: 8px;
+
+    & table {
+        border-collapse: collapse;
+
+        & tr {
+            border: var(--vscode-tree-tableColumnsBorder) 1px solid;
+        }
+
+        & th {
+            padding: 4px 8px;
+
+            &:first-child {
+                text-align: left;
+                width: 80px;
+            }
+
+            &:nth-child(2) {
+                padding-right: 16px;
+                text-align: right;
+                min-width: 100px;
+            }
+        }
+
+        & td {
+            padding: 4px 8px;
+            vertical-align: middle;
+
+            &:nth-child(2) {
+                text-align: right;
+                max-width: 300px;
+            }
+        }
+    }
+
+    & input[type="text"]:focus {
+        width: 100% !important;
+    }
+}
+
+.floatingArrow {
+    position: absolute;
+    background: var(--vscode-editorHoverWidget-background);
+    width: 12px;
+    height: 12px;
+    transform: rotate(45deg);
+}

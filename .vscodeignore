@@ -1,9 +1,9 @@
 .vscode/**
 .vscode-test/**
 out/**
-node_modules/**
-src/**
-.gitignore
+**/node_modules/**
+**/src/**
+**/.gitignore
 .yarnrc
 esbuild.js
 vsc-extension-quickstart.md
@@ -13,3 +13,9 @@ vsc-extension-quickstart.md
 **/*.ts
 **/.vscode-test.*
 doc_resources/**
+**/package.json
+**/tsconfig.app.json
+**/tsconfig.node.json
+**/yarn.lock
+**/.idea/**
+widget-preview/index.html

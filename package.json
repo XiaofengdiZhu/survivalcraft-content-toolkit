@@ -6,7 +6,7 @@
     "Survivalcraft",
     "生存战争"
   ],
-  "version": "0.3.2",
+  "version": "0.4.0",
   "icon": "icon.png",
   "author": {
     "name": "XiaofengdiZhu 销锋镝铸",
@@ -24,13 +24,16 @@
     "url": "https://github.com/XiaofengdiZhu/survivalcraft-content-toolkit.git"
   },
   "engines": {
-    "vscode": "^1.97.0"
+    "vscode": "^1.99.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:xml"
+    "onLanguage:xml",
+    "onLanguage:json",
+    "onLanguage:csv",
+    "onWebviewPanel:sctWidgetPreview"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -76,9 +79,30 @@
         "title": "%commands.removeFromPreBlocksDataFiles.title%"
       },
       {
+        "command": "survivalcraft-content-toolkit.addToContentDirectories",
+        "when": "explorerResourceIsFolder",
+        "title": "%commands.addToContentDirectories.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.removeFromContentDirectories",
+        "when": "explorerResourceIsFolder",
+        "title": "%commands.removeFromContentDirectories.title%"
+      },
+      {
         "command": "survivalcraft-content-toolkit.openFile",
         "when": "false",
         "title": "%%commands.openFile.title%"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.previewWidget.start",
+        "when": "false",
+        "title": "%commands.previewWidget.start.title%",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "survivalcraft-content-toolkit.previewWidget.inspect",
+        "when": "false",
+        "title": "%commands.previewWidget.inspect.title%"
       }
     ],
     "menus": {
@@ -122,6 +146,11 @@
           "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
           "when": "resourcePath in sct.preposedBlocksDataFiles",
           "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.previewWidget.start",
+          "when": "resourceExtname == .xml && resourceDirname =~ /.*[\\/\\\\](Dialogs|Screens|Styles|Widgets)$/",
+          "group": "z_commands"
         }
       ],
       "explorer/context": [
@@ -154,12 +183,32 @@
           "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
           "when": "resourcePath in sct.preposedBlocksDataFiles",
           "group": "2_workspace"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.addToContentDirectories",
+          "when": "explorerResourceIsFolder && resourcePath not in sct.contentDirectories",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.removeFromContentDirectories",
+          "when": "explorerResourceIsFolder && resourcePath in sct.contentDirectories",
+          "group": "1_modification@1.01"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.previewWidget.start",
+          "when": "resourceExtname == .xml && resourceDirname =~ /.*[\\/\\\\](Dialogs|Screens|Styles|Widgets)$/",
+          "group": "navigation"
         }
       ],
       "editor/title": [
         {
           "command": "survivalcraft-content-toolkit.insertClipboardWithRandomizedGuids",
           "when": "resourceExtname == .xdb || resourceFilename == Database.xml",
+          "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.previewWidget.start",
+          "when": "resourceExtname == .xml && resourceDirname =~ /.*[\\/\\\\](Dialogs|Screens|Styles|Widgets)$/",
           "group": "navigation"
         }
       ],
@@ -193,6 +242,17 @@
           "command": "survivalcraft-content-toolkit.removeFromPreBlocksDataFiles",
           "when": "resourcePath in sct.preposedBlocksDataFiles",
           "group": "navigation"
+        },
+        {
+          "command": "survivalcraft-content-toolkit.previewWidget.start",
+          "when": "resourceExtname == .xml && resourceDirname =~ /.*[\\/\\\\](Dialogs|Screens|Styles|Widgets)$/",
+          "group": "3_preview"
+        }
+      ],
+      "webview/context": [
+        {
+          "command": "survivalcraft-content-toolkit.previewWidget.inspect",
+          "when": "webviewId ==`sctWidgetPreview` && webviewSection =~ /body\\/?.*/"
         }
       ]
     },
@@ -249,6 +309,15 @@
           },
           "markdownDescription": "%configurations.preposedBlocksDataFiles.description%",
           "scope": "machine"
+        },
+        "survivalcraft-content-toolkit.contentDirectories": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "%configurations.contentDirectories.description%",
+          "scope": "machine"
         }
       }
     },
@@ -303,17 +372,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.97.0",
+    "@types/vscode": "^1.99.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.22.0",
-    "@typescript-eslint/parser": "^8.22.0",
-    "eslint": "^9.19.0",
-    "esbuild": "^0.24.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "esbuild": "^0.25.1",
     "npm-run-all": "^4.1.5",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.5.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

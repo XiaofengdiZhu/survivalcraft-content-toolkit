@@ -10,7 +10,7 @@ export function initeBlocksDataCommands(subscriptions: vscode.Disposable[]) {
     const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
     let files: string[] = config.get('preposedBlocksDataFiles') ?? [];
     vscode.commands.executeCommand('setContext', 'sct.preposedBlocksDataFiles', files);
-    subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.addToPreBlocksDataFiles', addToPrePreBlocksDataFiles));
+    subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.addToPreBlocksDataFiles', addToPreBlocksDataFiles));
     subscriptions.push(vscode.commands.registerCommand('survivalcraft-content-toolkit.removeFromPreBlocksDataFiles', removeFromPrePreBlocksDataFiles));
     const config1 = vscode.workspace.getConfiguration("editor", { languageId: "xml" });
     const quickSuggestions: QuickSuggestions = config1.get("quickSuggestions") ?? {};
@@ -20,34 +20,36 @@ export function initeBlocksDataCommands(subscriptions: vscode.Disposable[]) {
     }
 }
 
-function addToPrePreBlocksDataFiles(arg: any) {
-    if (arg?.fsPath) {
+export function addToPreBlocksDataFiles(uri: any, noWarning: boolean = false) {
+    if (uri?.fsPath) {
         const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
         let files: string[] = config.get('preposedBlocksDataFiles') ?? [];
         if (files) {
-            if (files.includes(arg.fsPath)) {
-                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.blocksData")));
+            if (files.includes(uri.fsPath)) {
+                if (!noWarning) {
+                    vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.blocksData")));
+                }
             } else {
-                files.push(arg.fsPath);
-                vscode.workspace.getConfiguration('survivalcraft-content-toolkit').update('preposedBlocksDataFiles', files, vscode.ConfigurationTarget.Global);
+                files.push(uri.fsPath);
+                config.update('preposedBlocksDataFiles', files, vscode.ConfigurationTarget.Global);
                 vscode.commands.executeCommand('setContext', 'sct.preposedBlocksDataFiles', files);
                 vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreFiles", vscode.l10n.t("main.blocksData")));
-                readAndWatchBlocksDataFile(arg.fsPath);
+                readAndWatchBlocksDataFile(uri.fsPath);
             }
         }
     }
 }
 
-function removeFromPrePreBlocksDataFiles(arg: any) {
-    if (arg?.fsPath) {
+function removeFromPrePreBlocksDataFiles(uri: any) {
+    if (uri?.fsPath) {
         const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
         let files: string[] = config.get('preposedBlocksDataFiles') ?? [];
-        if (files && files.includes(arg.fsPath)) {
-            files = files.filter(file => file !== arg.fsPath);
+        if (files && files.includes(uri.fsPath)) {
+            files = files.filter(file => file !== uri.fsPath);
             config.update('preposedBlocksDataFiles', files, vscode.ConfigurationTarget.Global);
             vscode.commands.executeCommand('setContext', 'sct.preposedBlocksDataFiles', files);
             vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreFiles", vscode.l10n.t("main.blocksData")));
-            closeBlocksDataDiagnostics(arg.fsPath, false);
+            closeBlocksDataDiagnostics(uri.fsPath, false);
         }
     }
 }

@@ -9,11 +9,16 @@
     "commands.removeFromPreLanguageFiles.title": "Remove this file from SCT preposed Languages",
     "commands.addToPreBlocksDataFiles.title": "Add this file to SCT preposed BlocksData",
     "commands.removeFromPreBlocksDataFiles.title": "Remove this file from SCT preposed BlocksData",
+    "commands.addToContentDirectories.title": "Add this directory to SCT Content directories",
+    "commands.removeFromContentDirectories.title": "Remove this directory from SCT Content directories",
     "commands.openFile.title": "Open file",
+    "commands.previewWidget.start.title": "Preview Widget (SCT)",
+    "commands.previewWidget.inspect.title": "Inspect",
     "configurations.preposedLanguageFiles.description": "### Preposed Language Files\n\nThis extension will preload the strings from the following Language files in order.\n\nFor example, if you add the full `en-US.json` to this list, when you hover the cursor on `\"[MainMenuScreen:2]\"`, you will see `Play (English)`.\n\nYou can right click on a `*.json` file to add it to this list.",
     "configurations.defaultDatabaseXsdPath.description": "### Default Database.xsd path\n\nWhen the XSD is not set at the root element, you can set it in the Quick Fix.",
     "configurations.preposedDatabaseFiles.description": "### Preposed Database Files\n\nThis extension will preload the GUIDs from the following Database files in order.\n\nYou can right click on a `Database.xml` or `*.xdb` file to add it to this list.",
     "configurations.defaultClothesXsdPath.description": "### Default Clothes.xsd path\n\nWhen the XSD is not set at the root element, you can set it in the Quick Fix.",
     "configurations.defaultCraftingRecipesXsdPath.description": "### Default CraftingRecipes.xsd path\n\nWhen the XSD is not set at the root element, you can set it in the Quick Fix.",
-    "configurations.preposedBlocksDataFiles.description": "### Preposed BlocksData Files\n\nThis extension will preload the CraftingId from the following BlocksData files in order.\n\nThis is for showing the translation of ingredients in the CraftingRecipes.\n\nYou can right click on a `BlocksData.txt` or `*.csv` file to add it to this list."
+    "configurations.preposedBlocksDataFiles.description": "### Preposed BlocksData Files\n\nThis extension will preload the CraftingId from the following BlocksData files in order.\n\nThis is for showing the translation of ingredients in the CraftingRecipes.\n\nYou can right click on a `BlocksData.txt` or `*.csv` file to add it to this list.",
+    "configurations.contentDirectories.description": "### Content Directories\n\nThis extension will load resource files, like image and audio, from the following directories.\n\nYou can right click on any directories to add it to this list. When adding, it will scan files in the directory, and if it detects database, blocksdata, or language files, it will add them to the corresponding preposed list.\n\nWhen you remove directories from this list, don't forget to remove the files in other preposed list."
 }

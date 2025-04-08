@@ -4,6 +4,7 @@ import { languageFileWatchers } from './common/languageDiagnostics';
 import { initeActions } from './actions';
 import { initeCommands } from './commands';
 import { blocksDataFileWatchers } from './blocksdata/diagnostics';
+import { webviewPanel } from './widgets/commands';
 export function activate(context: vscode.ExtensionContext) {
 	initeCommands(context);
 	initeDiagnostics(context);
@@ -11,6 +12,9 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+	if (webviewPanel) {
+		webviewPanel.dispose();
+	}
 	languageFileWatchers.forEach(watcher => {
 		watcher.close();
 	});

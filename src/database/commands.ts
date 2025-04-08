@@ -23,37 +23,39 @@ function insertRandomGuid(textEditor: vscode.TextEditor, edit: vscode.TextEditor
     });
 }
 
-function addToPreDatabaseFiles(arg: any) {
-    if (arg?.fsPath) {
+export function addToPreDatabaseFiles(uri: any, noWarning: boolean = false) {
+    if (uri?.fsPath) {
         const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
         let files: string[] = config.get('preposedDatabaseFiles') ?? [];
         if (files) {
-            if (files.includes(arg.fsPath)) {
-                vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.database")));
+            if (files.includes(uri.fsPath)) {
+                if (!noWarning) {
+                    vscode.window.showWarningMessage(vscode.l10n.t("messages.alreadyInPreFiles", vscode.l10n.t("main.database")));
+                }
             } else {
-                files.push(arg.fsPath);
+                files.push(uri.fsPath);
                 config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
                 vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
                 vscode.window.showInformationMessage(vscode.l10n.t("messages.addedToPreFiles", vscode.l10n.t("main.database")));
-                if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
-                    vscode.workspace.openTextDocument(arg.fsPath);
+                if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === uri.fsPath)) {
+                    vscode.workspace.openTextDocument(uri.fsPath);
                 }
             }
         }
     }
 }
 
-function removeFromPreDatabaseFiles(arg: any) {
-    if (arg?.fsPath) {
+function removeFromPreDatabaseFiles(uri: any) {
+    if (uri?.fsPath) {
         const config = vscode.workspace.getConfiguration('survivalcraft-content-toolkit');
         let files: string[] = config.get('preposedDatabaseFiles') ?? [];
-        if (files && files.includes(arg.fsPath)) {
-            files = files.filter(file => file !== arg.fsPath);
+        if (files && files.includes(uri.fsPath)) {
+            files = files.filter(file => file !== uri.fsPath);
             config.update('preposedDatabaseFiles', files, vscode.ConfigurationTarget.Global);
             vscode.commands.executeCommand('setContext', 'sct.preposedDatabaseFiles', files);
             vscode.window.showInformationMessage(vscode.l10n.t("messages.removedFromPreFiles", vscode.l10n.t("main.database")));
-            if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === arg.fsPath)) {
-                removeFromPreDatabaseFiles(arg.fsPath);
+            if (!vscode.workspace.textDocuments.some(doc => doc.uri.fsPath === uri.fsPath)) {
+                removeFromPreDatabaseFiles(uri.fsPath);
             }
         }
     }
