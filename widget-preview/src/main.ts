@@ -9,10 +9,13 @@ import {parse} from "@vue/compiler-dom";
 const vscode = (globalThis as any).acquireVsCodeApi?.();
 
 function getState(...args: string[]) {
-    if (!vscode) {
-        return null;
+    let state = vscode?.getState();
+    if (!state) {
+        const temp = localStorage.getItem("SCT");
+        if (temp) {
+            state = JSON.parse(temp);
+        }
     }
-    let state = vscode.getState();
     if (state) {
         for (let i = 0; i < args.length; i++) {
             state = state[args[i]];
@@ -25,11 +28,8 @@ function getState(...args: string[]) {
     return null;
 }
 
-function setState(value: any, ...args: string[]) {
-    if (!vscode) {
-        return;
-    }
-    let originalState = vscode.getState();
+export function setState(value: any, ...args: string[]) {
+    let originalState = getState();
     if (!originalState) {
         originalState = {};
     }
@@ -47,8 +47,8 @@ function setState(value: any, ...args: string[]) {
         if (state[lastArg] !== value) {
             state[lastArg] = value;
         }
-        //console.log("setState", originalState);
-        vscode.setState(originalState);
+        localStorage.setItem("SCT", JSON.stringify(originalState));
+        vscode?.setState(originalState);
     }
 }
 
@@ -79,7 +79,11 @@ export const languageNames = ref<{
 }>({});
 export const languageSelected = ref<string>(getState("languageSelected") ?? globalThis.navigator.language.toLowerCase() ?? "en-us");
 export const languageStrings = shallowReactive<Map<string, any>>(new Map());
+export const fontNames = ref<string[]>([]);
+console.log("fontSelected", getState("fontSelected") ?? "no");
+export const fontSelected = ref<string>(getState("fontSelected") ?? "system-ui");
 export let atlasDefinition: any = {};
+export let buttonClickAudio: AudioArrayBufferPlayer | null = null;
 
 window.addEventListener("message", event => {
     const message = event.data as Message;
@@ -122,6 +126,19 @@ window.addEventListener("message", event => {
             }
             break;
         }
+        case "fontNames": {
+            if (message.content && Array.isArray(message.content)) {
+                fontNames.value = message.content;
+                if (fontSelected.value !== "system-ui" && !message.content.includes(fontSelected.value)) {
+                    fontSelected.value = "system-ui";
+                    setState("system-ui", "fontSelected");
+                }
+                else {
+                    setState(fontSelected.value, "fontSelected");
+                }
+            }
+            break;
+        }
         case "widgetString": {
             if (message.title && message.content && typeof message.content === "string") {
                 createComponentFromString(extractFileName(message.title), message.content);
@@ -145,6 +162,14 @@ window.addEventListener("message", event => {
                         responseHandlers.delete(message.title);
                     }
                 });
+            }
+            break;
+        }
+        case "audioFile": {
+            if (message.title && message.content) {
+                if (message.title === "buttonClickAudio") {
+                    buttonClickAudio = new AudioArrayBufferPlayer(message.content);
+                }
             }
             break;
         }
@@ -287,33 +312,6 @@ if (vscode) {
     vscode.postMessage({type: "report", title: "webviewInitialized"});
 }
 
-widgetToPreview.value = {
-    name: "aa", content: `<CanvasWidget xmlns="runtime-namespace:Game" Size="64, Infinity">
-
-  <StackPanelWidget Direction="Vertical" Margin="4, 0" >
-    <CanvasWidget Size="0, 4" />
-    <BevelledButtonWidget Name="TopBar.Back" Size="60, 60" Text="[TopBarContents:1]">
-      <CanvasWidget Name="BevelledButton.Canvas" Margin="0, 0" />
-      <BevelledRectangleWidget Name="BevelledButton.Rectangle" CenterColor="50, 150, 35" BevelColor="50, 150, 35" />
-      <RectangleWidget Name="BevelledButton.Image" Size="32, 32" Subtexture="{Textures/Atlas/ArrowLeft}" OutlineColor="0, 0, 0, 0" FillColor="255, 255, 255" IsVisible="true" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </BevelledButtonWidget>
-    <CanvasWidget Size="0, 4" />
-    <BevelledRectangleWidget Size="60, Infinity" TextureScale="0.5" CenterColor="50, 150, 35" BevelColor="50, 150, 35" />
-    <CanvasWidget Size="0, 4" />
-  </StackPanelWidget>
-
-  <StackPanelWidget Direction="Vertical" IsHitTestVisible="false" Margin="4, 0">
-    <CanvasWidget Size="0, 4" />
-    <CanvasWidget Size="0, 64" />
-    <CanvasWidget Size="54, Infinity" VerticalAlignment="Center" Margin="0, 10" ClampToBounds="true">
-      <LabelWidget Name="TopBar.Label" Text="[TopBarContents:2]" TextOrientation="VerticalLeft"  Color="255, 255, 255, 255" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </CanvasWidget>
-    <CanvasWidget Size="0, 4" />
-  </StackPanelWidget>
-
-</CanvasWidget>`
-};
-
 function cookStyles(styles: any) {
     const cookingStyles: Style[] = [];
     for (const [styleName, styleString] of Object.entries(styles)) {
@@ -445,6 +443,29 @@ export function applyStyleToNode(style: Style, node: ElementNode) {
     for (const styleChild of style.node.children) {
         if (styleChild.type === NodeTypes.ELEMENT) {
             node.children.push(cloneNode(styleChild));
+        }
+    }
+}
+
+class AudioArrayBufferPlayer {
+    audioContext: AudioContext = new AudioContext();
+    audioBuffer?: AudioBuffer;
+
+    constructor(arrayBuffer: ArrayBuffer) {
+        this.audioContext.decodeAudioData(arrayBuffer).then(audioBuffer => {
+            this.audioBuffer = audioBuffer;
+        });
+    }
+
+    play() {
+        if (this.audioBuffer) {
+            const source = this.audioContext.createBufferSource();
+            source.buffer = this.audioBuffer;
+            source.connect(this.audioContext.destination);
+            source.start();
+            source.onended = () => {
+                source.disconnect();
+            };
         }
     }
 }

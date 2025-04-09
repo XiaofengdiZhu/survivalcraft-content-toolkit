@@ -35,14 +35,26 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
                 this.fontScale.value = props.FontScale;
             }
         }
+        else {
+            this.fontScale.value = 1;
+        }
         if (props.Subtexture !== undefined) {
             this.subtexture.value = props.Subtexture;
+        }
+        else {
+            this.subtexture.value = "";
         }
         if (props.BevelColor !== undefined) {
             this.bevelColor.value.update(props.BevelColor);
         }
+        else {
+            this.bevelColor.value.update(new Color(181, 172, 154));
+        }
         if (props.CenterColor !== undefined) {
             this.centerColor.value.update(props.CenterColor);
+        }
+        else {
+            this.centerColor.value.update(new Color(181, 172, 154));
         }
         if (props.AmbientLight !== undefined) {
             if (typeof props.AmbientLight === "string") {
@@ -55,6 +67,9 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
                 this.ambientLight.value = props.AmbientLight;
             }
         }
+        else {
+            this.ambientLight.value = 0.6;
+        }
         if (props.DirectionalLight !== undefined) {
             if (typeof props.DirectionalLight === "string") {
                 const num = parseFloat(props.DirectionalLight);
@@ -66,6 +81,9 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
                 this.directionalLight.value = props.DirectionalLight;
             }
         }
+        else {
+            this.directionalLight.value = 0.4;
+        }
         if (props.BevelSize !== undefined) {
             if (typeof props.BevelSize === "string") {
                 const num = parseFloat(props.BevelSize);
@@ -76,6 +94,9 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
             else {
                 this.bevelSize.value = props.BevelSize;
             }
+        }
+        else {
+            this.bevelSize.value = 2;
         }
     }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import {defaultWidgetProps, type WidgetProps} from "./Widget.ts";
-import {CanvasWidgetClass} from "./CanvasWidget.ts";
+import {CanvasWidgetClass} from "./Layouts/CanvasWidget.ts";
 import {closeInspectorDelay, openInspector, openInspectorDelay} from "../Components/Inspector.ts";
 
 export interface UnknownWidgetProps extends WidgetProps {

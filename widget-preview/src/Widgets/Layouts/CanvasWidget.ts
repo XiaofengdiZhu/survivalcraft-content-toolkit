@@ -1,5 +1,5 @@
-import {SizeLengthType, WidgetAlignment} from "../Common.ts";
-import {WidgetClass, type WidgetProps} from "./Widget.ts";
+import {SizeLengthType, WidgetAlignment} from "../../Common.ts";
+import {WidgetClass, type WidgetProps} from "../Widget.ts";
 import type {CSSProperties} from "@vue/runtime-dom";
 import {ref} from "vue";
 
@@ -53,11 +53,6 @@ export class CanvasWidgetClass<T extends WidgetProps = WidgetProps> extends Widg
                 this._height.value = value;
             }
         }
-    }
-
-    updateFromProps(props: T) {
-        this.isContainer = true;
-        super.updateFromProps(props);
     }
 
     alignment2Style(horizontalAlignment?: WidgetAlignment,
@@ -157,5 +152,9 @@ export class CanvasWidgetClass<T extends WidgetProps = WidgetProps> extends Widg
                 this.parent.updateSize();
             }
         }
+    }
+
+    afterInit() {
+        this.isCanvasWidget = true;
     }
 }

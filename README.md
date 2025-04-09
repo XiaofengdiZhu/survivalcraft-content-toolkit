@@ -45,6 +45,11 @@ I strongly suggest to set the root element as below
 
 ### Widget 部件
 
+Right click on the xml files in `Widgets`, `Screens`, `Dialogs` to preview it. This feature is not perfect and still in development.  
+右键点击`Widgets`、`Screens`、`Dialogs`中的xml文件，即可预览它。此功能还不完善，持续开发中
+
+![](https://raw.githubusercontent.com/XiaofengdiZhu/survivalcraft-content-toolkit/refs/heads/main/doc_resources/preview_of_widget.webp)
+
 For contents like `CenterColor="50, 150, 35"`, there will be a colored square ${{\color{#329623}■}}$ displayed after the `=` sign, indicating the color corresponding to the content. When you hover on the square, you can edit the color in a visual way.  
 在像`CenterColor="50, 150, 35"`这样内容的`=`后面会显示一个带颜色的方块${\color{#329623}■}$，以指示该内容对应的颜色。当你将鼠标悬停在方块上，你可以可视化地编辑颜色
 
@@ -76,6 +81,9 @@ Only suggests to set the root element as below
 为了显示原料的翻译，你还需要添加基本的`BlocksData.txt`到前置方块表中
 
 ### Common 一般
+
+I recommend you to right click on a `Assets` directory to add it to SCT Content directories. When adding, it will scan files in the directory, and if it detects database, blocksdata, or language files, it will add them to the corresponding preposed list. Some features will load resource files, like image and audio, from the SCT Content directories.  
+我建议右键点击一个`Assets`目录来把它添加到 SCT 内容目录。添加时它会扫描其中的文件，如果检测到数据库、方块表、语言文件，会将它们添加到对应的前置列表中。一些功能将从指定的这些目录读取图片等资源文件。
 
 After you right-clicking on a json language file and adding it to the preposed languages, you can hover over contents like `"[MainMenuScreen:2]"`, and it will display the corresponding string `Play` and its language `(English)`.  
 当你通过右键把 json 格式的语言文件添加到前置语言文件后，你可以把鼠标悬停在像`"[MainMenuScreen:2]"`这样的内容上，将像这样显示其对应的字符串`游戏`以及其语言`(中文)`  

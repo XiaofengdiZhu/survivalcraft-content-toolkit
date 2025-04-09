@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {languageNames, languageSelected, requestLanguageStrings} from "./main.ts";
+import {fontNames, fontSelected, languageNames, languageSelected, requestLanguageStrings, setState} from "./main.ts";
 import {onMounted, onUnmounted, ref, watch} from "vue";
 import type {CSSProperties} from "@vue/runtime-dom";
 import FloatingDialog from "./Components/FloatingDialog.vue";
@@ -66,10 +66,16 @@ function updatePreviewContainerStyle() {
         scale: scale.toString()
     };
 }
+
+function changeFont(fontName: string) {
+    console.log(`changeFont: ${fontName}`);
+    fontSelected.value = fontName;
+    setState(fontName, "fontSelected");
+}
 </script>
 
 <template>
-    <div id="configurationArea" @click="closeInspector">
+    <div class="configurationArea" @click="closeInspector" style="margin-top: 20px;">
         <div class="configurationItem">
             <button id="clickToDisplayDialogSwitch" :class="clickToDisplayDialog ? 'active' : ''" @click="clickToDisplayDialog = !clickToDisplayDialog">
                 <svg width="18" height="18" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
@@ -84,10 +90,11 @@ function updatePreviewContainerStyle() {
                 </svg>
             </label>
             <select id="languageSelector" v-model="languageSelected" @change="requestLanguageStrings((($event.target) as HTMLSelectElement).value)" style="min-width: 120px;">
-                <option v-for="(languageNativeName, languageName) in languageNames" :value="languageName">{{
-                        languageNativeName}}
+                <option v-for="(languageNativeName, languageName) in languageNames" :value="languageName">
+                    {{languageNativeName}}
                 </option>
-            </select></div>
+            </select>
+        </div>
         <div class="configurationItem">
             <label for="scaleRanger">
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
@@ -99,9 +106,24 @@ function updatePreviewContainerStyle() {
                     (parseFloat(previewContainerScaleSetting) * 100).toFixed(0)}}%</label>
         </div>
     </div>
-    <div id="previewArea" @click="closeInspector">
+    <div id="previewArea" @click="closeInspector" :style="{fontFamily: fontSelected === 'system-ui' ? 'system-ui' : `${fontSelected}, system-ui`}">
         <div id="previewContainer" ref="previewContainer" :style="previewContainerStyle">
             <WidgetPreviewer/>
+        </div>
+    </div>
+    <div class="configurationArea" style="margin-bottom: 20px;" @click="closeInspector">
+        <div class="configurationItem">
+            <label for="fontSelector">
+                <svg width="24" height="24" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11 6h-1v-.5a.5.5 0 0 0-.5-.5H8.479v5.5a.5.5 0 0 0 .5.5h.5v1h-3v-1h.5a.5.5 0 0 0 .5-.5V5H6.5a.5.5 0 0 0-.5.5V6H5V4h6v2zm2.914 2.048l-1.462-1.462.707-.707 1.816 1.816v.707l-1.768 1.767-.707-.707 1.414-1.414zM3.548 9.462L2.086 8 3.5 6.586l-.707-.707-1.768 1.767v.708l1.816 1.815.707-.707z"/>
+                </svg>
+            </label>
+            <select id="fontSelector" v-model="fontSelected" @change="changeFont((($event.target) as HTMLSelectElement).value)" style="min-width: 120px;">
+                <option value="system-ui">system-ui</option>
+                <option v-for="fontName in fontNames" :value="fontName">
+                    {{fontName.replaceAll("\"", "")}}
+                </option>
+            </select>
         </div>
     </div>
     <FloatingDialog/>

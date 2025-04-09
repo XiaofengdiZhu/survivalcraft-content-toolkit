@@ -1169,6 +1169,11 @@ flatted@^3.2.9:
   resolved "https://mirrors.cloud.tencent.com/npm/flatted/-/flatted-3.3.2.tgz#adba1448a9841bec72b42c532ea23dbbedef1a27"
   integrity sha512-AiwGJM8YcNOaobumgtng+6NHuOqC3A7MixFeDafM3X9cIUM+xUXoS5Vfgf+OihAYe20fxqNM9yPBXJzRtZ/4eA==
 
+font-list@^1.5.1:
+  version "1.5.1"
+  resolved "http://mirrors.cloud.tencent.com/npm/font-list/-/font-list-1.5.1.tgz#55c45a974dd30862bafcf5b7ce694bded184c08c"
+  integrity sha512-Hr5V0dsSv91wH3FgirXd7qh1PydqA/vMQyWjFFWn+lUPJtC+3i2tzgVqbLRcvQh87TGdbTGbAR3mEo4VlwC1jw==
+
 for-each@^0.3.3:
   version "0.3.5"
   resolved "https://mirrors.cloud.tencent.com/npm/for-each/-/for-each-0.3.5.tgz#d650688027826920feeb0af747ee7b9421a41d47"

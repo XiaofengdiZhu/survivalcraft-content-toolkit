@@ -3,6 +3,7 @@ import {defaultWidgetProps, WidgetClass, type WidgetProps} from "./Widget.ts";
 import type {CSSProperties} from "@vue/runtime-dom";
 import {computed, ref} from "vue";
 import {AttributeType} from "../Components/Inspector.ts";
+import {fontSelected} from "../main.ts";
 
 export interface FontTextWidgetProps extends WidgetProps {
     Text?: string,
@@ -26,6 +27,8 @@ export const defaultFontTextWidgetProps = {
 const defaultFontSize = 19;
 const defaultLineHeight = 25.5;
 
+const context2D = new OffscreenCanvas(0, 0).getContext("2d");
+
 export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
     text = ref("");
     textAnchor = ref<Set<TextAnchor>>(new Set<TextAnchor>());
@@ -43,7 +46,7 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
 
     get width() {
         if (this._width.type === SizeLengthType.FitContent) {
-            return this.textSize.value?.width ?? -1;
+            return this.textSize2.value?.width ?? -1;
         }
         else {
             return this._width.value;
@@ -56,7 +59,7 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
 
     get height() {
         if (this._height.type === SizeLengthType.FitContent) {
-            return this.textSize.value?.height ?? -1;
+            return this.textSize2.value?.height ?? -1;
         }
         else {
             return this._height.value;
@@ -90,10 +93,10 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
                 maxCharLength = Math.max(maxCharLength, charLength);
             }
             if (maxCharLength > 0) {
-                let letterSpacing = this.fontSpacingX.value > 0 ?
+                const letterSpacing = this.fontSpacingX.value > 0 ?
                     this.fontSpacingX.value * this.fontScale.value :
                     0;
-                let lineHeight = this.fontSpacingY.value > 0 ?
+                const lineHeight = this.fontSpacingY.value > 0 ?
                     (defaultLineHeight + this.fontSpacingY.value) * this.fontScale.value :
                     defaultLineHeight * this.fontScale.value;
                 const textOrientationVertical = this.textOrientation.value === TextOrientation.VerticalLeft;
@@ -111,22 +114,81 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
         return result;
     });
 
+    textSize2 = computed(() => {
+        let result = {
+            width: 0, height: 0
+        };
+        if (this.text.value.length > 0 && context2D) {
+            let maxCharLength = 0;
+            const lines = this.getTreatedText().split("\n");
+            let lineIndexWithMaxCharLength = 0;
+            for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+                const line = lines[lineIndex];
+                let charLength = 0;
+                for (const char of line) {
+                    if (/[\u3400-\u9FBF\u2E80-\u2EFF\uF900-\uFAFF\u3040-\u309F\uAC00-\uD7AF]/.test(
+                        char)) {//CJK
+                        charLength += 1;
+                    }
+                    else {
+                        charLength += 0.5;
+                    }
+                }
+                if (charLength > maxCharLength) {
+                    lineIndexWithMaxCharLength = lineIndex;
+                    maxCharLength = charLength;
+                }
+            }
+            const textOrientationVertical = this.textOrientation.value === TextOrientation.VerticalLeft;
+            const lineHeight = this.fontSpacingY.value > 0 ?
+                (defaultLineHeight + this.fontSpacingY.value) * this.fontScale.value :
+                defaultLineHeight * this.fontScale.value;
+            context2D.font = `${(defaultFontSize * this.fontScale.value).toFixed(1)}px ${fontSelected.value}`;
+            context2D.letterSpacing = `${(this.fontSpacingX.value * this.fontScale.value).toFixed(1)}px`;
+            context2D.fontKerning = "normal";
+            const metrics = context2D.measureText(lines[lineIndexWithMaxCharLength]);
+            const columnCount = metrics.width;
+            const rowCount = lineHeight * lines.length;
+            result.width = textOrientationVertical ? rowCount : columnCount;
+            result.height = textOrientationVertical ? columnCount : rowCount;
+        }
+        if (this.parent && (result.width !== this.lastTextSize.width || result.height !== this.lastTextSize.height)) {
+            this.lastTextSize.width = result.width;
+            this.lastTextSize.height = result.height;
+            this.parent.updateSize();
+        }
+        return result;
+    });
+
     updateFromProps(props: FontTextWidgetProps) {
         super.updateFromProps(props);
         if (props.Text !== undefined) {
             this.text.value = props.Text;
         }
+        else {
+            this.text.value = "";
+        }
         if (props.TextAnchor !== undefined) {
+            this.textAnchor.value.clear();
             const array = props.TextAnchor.split(",");
             for (const str of array) {
                 this.textAnchor.value.add(string2TextAnchor(str.trim()));
             }
         }
+        else {
+            this.textAnchor.value.clear();
+        }
         if (props.TextOrientation !== undefined) {
             this.textOrientation.value = string2TextOrientation(props.TextOrientation);
         }
+        else {
+            this.textOrientation.value = TextOrientation.Horizontal;
+        }
         if (props.Font !== undefined) {
             this.font = props.Font;
+        }
+        else {
+            this.font = undefined;
         }
         if (props.FontScale !== undefined) {
             if (typeof props.FontScale === "string") {
@@ -138,6 +200,9 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
             else {
                 this.fontScale.value = props.FontScale;
             }
+        }
+        else {
+            this.fontScale.value = 1;
         }
         if (props.FontSpacing !== undefined) {
             const array = props.FontSpacing.split(",");
@@ -152,12 +217,12 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
                 }
             }
         }
-        if (props.WordWrap === "true" || props.WordWrap === true) {
-            this.wordWrap.value = true;
+        else {
+            this.fontSpacingX.value = 0;
+            this.fontSpacingY.value = 0;
         }
-        if (props.Ellipsis === "true" || props.Ellipsis === true) {
-            this.ellipsis.value = true;
-        }
+        this.wordWrap.value = props.WordWrap === "true" || props.WordWrap === true;
+        this.ellipsis.value = props.Ellipsis === "true" || props.Ellipsis === true;
         if (props.MaxLines !== undefined) {
             if (typeof props.MaxLines === "string") {
                 const num = parseInt(props.MaxLines);
@@ -169,15 +234,17 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
                 this.maxLines.value = props.MaxLines;
             }
         }
+        else {
+            this.maxLines.value = 2147483647;
+        }
         if (props.Color !== undefined) {
             this.color.value.update(props.Color);
         }
-        if (props.DropShadow === "true" || props.DropShadow === true) {
-            this.dropShadow.value = true;
+        else {
+            this.color.value.update(new Color(255, 255, 255, 255));
         }
-        if (props.TextureLinearFilter === "false" || props.TextureLinearFilter === false) {
-            this.textureLinearFilter.value = false;
-        }
+        this.dropShadow.value = props.DropShadow === "true" || props.DropShadow === true;
+        this.textureLinearFilter.value = !(props.TextureLinearFilter === "false" || props.TextureLinearFilter === false);
     }
 
     getTreatedText() {
@@ -240,10 +307,10 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
         else {
             style.lineHeight = `${(defaultLineHeight * this.fontScale.value).toFixed(1)}px`;
         }
-        if (this.wordWrap) {
+        if (this.wordWrap.value) {
             style.textWrap = "wrap";
         }
-        if (this.ellipsis) {
+        if (this.ellipsis.value) {
             style.textOverflow = "ellipsis";
             style.overflow = "hidden";
         }

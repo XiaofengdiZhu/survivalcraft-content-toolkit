@@ -1,33 +1,41 @@
 import {compile, type Component, defineComponent} from "vue";
 import Widget from "./Widgets/Widget.vue";
 import UnknownWidget from "./Widgets/UnknownWidget.vue";
-import CanvasWidget from "./Widgets/CanvasWidget.vue";
-import StackPanelWidget from "./Widgets/StackPanelWidget.vue";
+import CanvasWidget from "./Widgets/Layouts/CanvasWidget.vue";
+import StackPanelWidget from "./Widgets/Layouts/StackPanelWidget.vue";
+import UniformSpacingPanelWidget from "./Widgets/Layouts/UniformSpacingPanelWidget.vue";
+import ScrollPanelWidget from "./Widgets/Layouts/ScrollPanelWidget.vue";
 import RectangleWidget from "./Widgets/RectangleWidget.vue";
 import FontTextWidget from "./Widgets/FontTextWidget.vue";
 import LabelWidget from "./Widgets/LabelWidget.vue";
 import BevelledRectangleWidget from "./Widgets/BevelledRectangleWidget.vue";
 import BevelledButtonWidget from "./Widgets/BevelledButtonWidget.vue";
 import BitmapButtonWidget from "./Widgets/BitmapButtonWidget.vue";
+import PanoramaWidget from "./Widgets/PanoramaWidget.vue";
 import {NodeTypes, type TemplateChildNode} from "@vue/compiler-core";
 import {bevelledButtonWidgetLinearDescents} from "./Widgets/BevelledButtonWidget.ts";
 import {allStyles, createAttributeNode, applyStyleToNode} from "./main.ts";
+import {bitmapButtonWidgetLinearDescents} from "./Widgets/BitmapButtonWidget.ts";
 
 const allComponents: Record<string, Component> = {
     Widget,
     UnknownWidget,
     CanvasWidget,
     StackPanelWidget,
+    UniformSpacingPanelWidget,
+    ScrollPanelWidget,
     RectangleWidget,
     BevelledRectangleWidget,
     FontTextWidget,
     LabelWidget,
     BevelledButtonWidget,
-    BitmapButtonWidget
+    BitmapButtonWidget,
+    PanoramaWidget
 };
 
 export const linearDescentsMap: Map<string, Map<string, string>> = new Map();
 linearDescentsMap.set("BevelledButtonWidget", bevelledButtonWidgetLinearDescents);
+linearDescentsMap.set("BitmapButtonWidget", bitmapButtonWidgetLinearDescents);
 
 export function createComponentFromString(name: string, vueString: string, cache: boolean = true) {
     const component = defineComponent({
@@ -43,10 +51,16 @@ export function createComponentFromString(name: string, vueString: string, cache
                             }
                             let styleName: string | undefined;
                             for (const prop of node.props) {
-                                if (prop.type === NodeTypes.ATTRIBUTE && prop.name === "Style") {
-                                    styleName = prop.value?.content.replace("{", "")
-                                    .replace("}", "");
-                                    break;
+                                if (prop.type === NodeTypes.ATTRIBUTE) {
+                                    switch (prop.name) {
+                                        case "Style":
+                                            styleName = prop.value?.content.replace("{", "")
+                                            .replace("}", "");
+                                            break;
+                                        case "CanvasWidget.Position":
+                                            prop.name = "CanvasWidgetPosition";
+                                            break;
+                                    }
                                 }
                             }
                             if (styleName) {

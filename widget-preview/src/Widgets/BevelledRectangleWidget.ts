@@ -1,6 +1,6 @@
 import {type BoolString, Color} from "../Common.ts";
 import type {ButtonWidgetProps} from "./ButtonWidget.ts";
-import {CanvasWidgetClass} from "./CanvasWidget.ts";
+import {CanvasWidgetClass} from "./Layouts/CanvasWidget.ts";
 import type {CSSProperties} from "@vue/runtime-dom";
 import {ref} from "vue";
 import {AttributeType} from "../Components/Inspector.ts";
@@ -49,6 +49,9 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
                 this.roundingRadius.value = props.RoundingRadius;
             }
         }
+        else {
+            this.roundingRadius.value = 6;
+        }
         if (props.RoundingCount !== undefined) {
             if (typeof props.RoundingCount === "string") {
                 const num = parseInt(props.RoundingCount);
@@ -59,6 +62,9 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
             else {
                 this.roundingCount.value = props.RoundingCount;
             }
+        }
+        else {
+            this.roundingCount.value = 3;
         }
         if (props.BevelSize !== undefined) {
             if (typeof props.BevelSize === "string") {
@@ -71,6 +77,9 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
                 this.bevelSize.value = props.BevelSize;
             }
         }
+        else {
+            this.bevelSize.value = 2;
+        }
         if (props.AmbientLight !== undefined) {
             if (typeof props.AmbientLight === "string") {
                 const num = parseFloat(props.AmbientLight);
@@ -81,6 +90,9 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
             else {
                 this.ambientLight.value = props.AmbientLight;
             }
+        }
+        else {
+            this.ambientLight.value = 0.6;
         }
         if (props.DirectionalLight !== undefined) {
             if (typeof props.DirectionalLight === "string") {
@@ -93,8 +105,14 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
                 this.directionalLight.value = props.DirectionalLight;
             }
         }
+        else {
+            this.directionalLight.value = 0.4;
+        }
         if (props.Texture !== undefined) {
             this.texture = props.Texture;
+        }
+        else {
+            this.texture = undefined;
         }
         if (props.TextureScale !== undefined) {
             if (typeof props.TextureScale === "string") {
@@ -107,20 +125,33 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
                 this.textureScale.value = props.TextureScale;
             }
         }
-        if (props.TextureLinearFilter === "true" || this.props?.TextureLinearFilter === true) {
-            this.textureLinearFilter.value = true;
+        else {
+            this.textureScale.value = 1;
         }
+        this.textureLinearFilter.value = props.TextureLinearFilter === "true" || this.props?.TextureLinearFilter === true;
         if (props.CenterColor !== undefined) {
             this.centerColor.value.update(props.CenterColor);
+        }
+        else {
+            this.centerColor.value.update(new Color(181, 172, 154));
         }
         if (props.BevelColor !== undefined) {
             this.bevelColor.value.update(props.BevelColor);
         }
+        else {
+            this.bevelColor.value.update(new Color(181, 172, 154));
+        }
         if (props.ShadowColor !== undefined) {
             this.shadowColor.value.update(props.ShadowColor);
         }
+        else {
+            this.shadowColor.value.update(new Color(0, 0, 0, 32));
+        }
         if (props.TextureOffset !== undefined) {
             this.textureOffset = props.TextureOffset;
+        }
+        else {
+            this.textureOffset = undefined;
         }
     }
 

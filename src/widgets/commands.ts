@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { allLanguages, languageName2Native } from '../common/languageDiagnostics';
 import * as path from 'path';
+import { getFonts } from 'font-list';
+import { buffer } from 'stream/consumers';
 
 export let webviewPanel: vscode.WebviewPanel | null;
 let previewBaseUri: vscode.Uri;
@@ -94,7 +96,7 @@ function createWebviewPanel(title: string, fsPath: string) {
 
 class WidgetsSerializer implements vscode.WebviewPanelSerializer {
     async deserializeWebviewPanel(panel: vscode.WebviewPanel, state: any) {
-        //console.log("state", state);
+        console.log("state", state);
         initeWebviewPanel(panel, state?.fsPath);
     }
 }
@@ -152,6 +154,19 @@ function initeWebviewPanel(panel: vscode.WebviewPanel, fsPath?: string) {
                                 webviewPanel?.webview.postMessage({
                                     type: "atlasDefinition",
                                     content: atlasDefinition
+                                });
+                            });
+                            getFonts().then((fonts: string[]) => {
+                                webviewPanel?.webview.postMessage({
+                                    type: "fontNames",
+                                    content: fonts
+                                });
+                            });
+                            readBinaryFileFromContentDirectories("Audio\\UI\\ButtonClick", [".flac", ".wav"]).then(buffer => {
+                                webviewPanel?.webview.postMessage({
+                                    type: "audioFile",
+                                    title: "buttonClickAudio",
+                                    content: buffer
                                 });
                             });
                             break;

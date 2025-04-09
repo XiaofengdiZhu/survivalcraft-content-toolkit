@@ -128,26 +128,25 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
                 this.depth.value = props.Depth;
             }
         }
-        if (props.DepthWriteEnabled === "true" || props.DepthWriteEnabled === true) {
-            this.depthWriteEnabled.value = true;
+        else {
+            this.depth.value = 0;
         }
-        if (props.TextureWrap === "true" || props.TextureWrap === true) {
-            this.textureWrap.value = true;
-        }
-        if (props.TextureLinearFilter === "false" || props.TextureLinearFilter === false) {
-            this.textureLinearFilter.value = false;
-        }
-        if (props.FlipHorizontal === "true" || props.FlipHorizontal === true) {
-            this.flipHorizontal.value = true;
-        }
-        if (props.FlipVertical === "true" || props.FlipVertical === true) {
-            this.flipVertical.value = true;
-        }
+        this.depthWriteEnabled.value = props.DepthWriteEnabled === "true" || props.DepthWriteEnabled === true;
+        this.textureWrap.value = props.TextureWrap === "true" || props.TextureWrap === true;
+        this.textureLinearFilter.value = !(props.TextureLinearFilter === "false" || props.TextureLinearFilter === false);
+        this.flipHorizontal.value = props.FlipHorizontal === "true" || props.FlipHorizontal === true;
+        this.flipVertical.value = props.FlipVertical === "true" || props.FlipVertical === true;
         if (props.FillColor !== undefined) {
             this.fillColor.value.update(props.FillColor);
         }
+        else {
+            this.fillColor.value.update(new Color(0, 0, 0, 255));
+        }
         if (props.OutlineColor !== undefined) {
             this.outlineColor.value.update(props.OutlineColor);
+        }
+        else {
+            this.outlineColor.value.update(new Color(255, 255, 255, 255));
         }
         if (props.OutlineThickness !== undefined) {
             if (typeof props.OutlineThickness === "string") {
@@ -159,6 +158,9 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
             else {
                 this.outlineThickness.value = props.OutlineThickness;
             }
+        }
+        else {
+            this.outlineThickness.value = 1;
         }
         if (props.Texcoord1 !== undefined) {
             const array = props.Texcoord1.split(",");
@@ -173,6 +175,10 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
                 }
             }
         }
+        else {
+            this.texcoord1X.value = 0;
+            this.texcoord1Y.value = 0;
+        }
         if (props.Texcoord2 !== undefined) {
             const array = props.Texcoord2.split(",");
             if (array.length > 1) {
@@ -186,9 +192,17 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
                 }
             }
         }
+        else {
+            this.texcoord2X.value = 1;
+            this.texcoord2Y.value = 1;
+        }
         if (props.Subtexture !== undefined) {
             this.subtexture.value = props.Subtexture;
             this.updateCanvas();
+        }
+        else {
+            this.subtexture.value = "";
+            this.clearCanvas();
         }
     }
 
@@ -275,6 +289,9 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
                 this.texcoord2Y.value = value.Y;
             }
         });
+    }
+
+    afterInit() {
         watch([this.subtexture, this.texcoord1X, this.texcoord1Y, this.texcoord2X, this.texcoord2Y],
             () => this.updateCanvas());
     }

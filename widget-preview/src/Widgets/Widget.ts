@@ -8,11 +8,13 @@ export interface WidgetProps {
     GlobalScale?: string | number,
     IsVisible?: BoolString | boolean,
     IsEnabled?: BoolString | boolean,
+    ClampToBounds?: BoolString | boolean,
     Margin?: string,//number,number
     HorizontalAlignment?: WidgetAlignmentString | WidgetAlignment,
     VerticalAlignment?: WidgetAlignmentString | WidgetAlignment,
     Size?: string,//number,number
     Style?: string,
+    CanvasWidgetPosition?: string;//number,number
     //For this toolkit
     NoInspector?: boolean,
     OverrideChildren?: string | any
@@ -27,9 +29,9 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
     htmlElement?: Ref<HTMLElement | null, HTMLElement | null>;
     parent?: WidgetClass;
     children: WidgetClass[] = [];
-    isContainer: boolean = false;
     overrideChildren: Map<string, any> = new Map();
     inspectorProvider: InspectorProvider;
+    isCanvasWidget = false;
     _isNoInspector: boolean = false;
     _isParentNoInspector: boolean = false;
 
@@ -89,6 +91,7 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
         }
     }
 
+    clampToBounds = ref(false);
     marginX = ref(0);
     marginY = ref(0);
     horizontalAlignment = ref(WidgetAlignment.Stretch);
@@ -122,6 +125,8 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
     }
 
     style?: string;
+    canvasWidgetPositionX = ref(-1);
+    canvasWidgetPositionY = ref(-1);
 
     constructor(customNameInInspector?: string) {
         this.inspectorProvider = new InspectorProvider(customNameInInspector ?? this.constructor.name.replace(
@@ -175,6 +180,7 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
             }
         });
         widget.initInspectorProvider();
+        widget.afterInit();
         return widget;
     }
 
@@ -196,6 +202,7 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
         }
         this.isVisible.value = !(props.IsVisible === "false" || props.IsVisible === false);
         this.isEnabled = !(props.IsEnabled === "false" || props.IsEnabled === false);
+        this.clampToBounds.value = props.ClampToBounds === "true" || props.ClampToBounds === true;
         if (props.Margin !== undefined) {
             const array = props.Margin.split(",");
             if (array.length > 1) {
@@ -203,6 +210,10 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
                 this.marginX.value = isNaN(num1) ? 0 : num1;
                 const num2 = parseFloat(array[1].trim());
                 this.marginY.value = isNaN(num2) ? 0 : num2;
+            }
+            else {
+                this.marginX.value = 0;
+                this.marginY.value = 0;
             }
         }
         else {
@@ -239,6 +250,10 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
                 const num2 = parseFloat(array[1].trim());
                 this.height = isNaN(num2) ? -1 : num2;
             }
+            else {
+                this.width = -1;
+                this.height = -1;
+            }
         }
         else {
             this.width = -1;
@@ -263,21 +278,54 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
                 }
             }
         }
+        if (props.Style !== undefined && props.Style.length > 0) {
+            this.style = props.Style.trim();
+        }
+        else {
+            this.style = "";
+        }
+        if (props.CanvasWidgetPosition !== undefined) {
+            const array = props.CanvasWidgetPosition.split(",");
+            if (array.length > 1) {
+                const num1 = parseFloat(array[0].trim());
+                this.canvasWidgetPositionX.value = isNaN(num1) ? -1 : num1;
+                const num2 = parseFloat(array[1].trim());
+                this.canvasWidgetPositionY.value = isNaN(num2) ? -1 : num2;
+            }
+            else {
+                this.canvasWidgetPositionX.value = -1;
+                this.canvasWidgetPositionY.value = -1;
+            }
+        }
+        else {
+            this.canvasWidgetPositionX.value = -1;
+            this.canvasWidgetPositionY.value = -1;
+        }
     }
 
     getStyle(): CSSProperties {
         let style: CSSProperties = {position: "relative"};
         style.width = SizeLength.toCssString(this.width, this.marginX.value);
         style.height = SizeLength.toCssString(this.height, this.marginY.value);
+        if (this.clampToBounds.value) {
+            style.overflow = "hidden";
+        }
         if (this.marginX.value > 0 || this.marginY.value > 0) {
             style.margin = `${this.marginY.value}px ${this.marginX.value}px`;
         }
         if (this.parent) {
-            style = Object.assign(style,
-                this.parent.alignment2Style(this.horizontalAlignment.value,
-                    this.verticalAlignment.value,
-                    SizeLength.value2Type(this.width),
-                    SizeLength.value2Type(this.height)));
+            if (this.parent.isCanvasWidget && this.canvasWidgetPositionX.value >= 0) {
+                style.position = "absolute";
+                style.left = `${this.canvasWidgetPositionX.value}px`;
+                style.top = `${this.canvasWidgetPositionY.value}px`;
+            }
+            else {
+                style = Object.assign(style,
+                    this.parent.alignment2Style(this.horizontalAlignment.value,
+                        this.verticalAlignment.value,
+                        SizeLength.value2Type(this.width),
+                        SizeLength.value2Type(this.height)));
+            }
         }
         if (this.globalScale.value !== 1) {
             style.scale = this.globalScale.value;
@@ -351,5 +399,39 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
             value => {
                 this.verticalAlignment.value = value;
             });
+        this.inspectorProvider.addAttribute<boolean>("Clamp\u200BTo\u200BBounds",
+            AttributeType.Boolean,
+            () => {
+                return this.clampToBounds.value;
+            },
+            value => {
+                this.clampToBounds.value = value;
+            });
+        this.inspectorProvider.addAttribute<string>("Style", AttributeType.String, () => {
+            return this.style ?? "";
+        }, value => {
+            this.style = value;
+        });
+        if (this.parent && this.parent.isCanvasWidget) {
+            this.inspectorProvider.addAttribute<Vector2>("Canvas\u200BWidget\u200B.Position",
+                AttributeType.Vector2,
+                () => {
+                    return {
+                        X: this.canvasWidgetPositionX.value,
+                        Y: this.canvasWidgetPositionY.value
+                    };
+                },
+                value => {
+                    if (value.X !== this.canvasWidgetPositionX.value) {
+                        this.canvasWidgetPositionX.value = value.X;
+                    }
+                    if (value.Y !== this.canvasWidgetPositionY.value) {
+                        this.canvasWidgetPositionY.value = value.Y;
+                    }
+                });
+        }
+    }
+
+    afterInit() {
     }
 }

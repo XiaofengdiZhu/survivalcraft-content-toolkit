@@ -17,8 +17,14 @@ export class BitmapButtonWidgetClass extends ButtonWidgetClass<BitmapButtonWidge
         if (props.NormalSubtexture !== undefined) {
             this.normalSubtexture.value = props.NormalSubtexture;
         }
+        else {
+            this.normalSubtexture.value = "";
+        }
         if (props.ClickedSubtexture !== undefined) {
             this.clickedSubtexture.value = props.ClickedSubtexture;
+        }
+        else {
+            this.clickedSubtexture.value = "";
         }
     }
 

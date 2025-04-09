@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
-import CanvasWidget from "./CanvasWidget.vue";
+import CanvasWidget from "./Layouts/CanvasWidget.vue";
 import LabelWidget from "./LabelWidget.vue";
 import BevelledRectangleWidget from "./BevelledRectangleWidget.vue";
 import {type BevelledButtonWidgetProps, BevelledButtonWidgetClass} from "./BevelledButtonWidget.ts";
@@ -8,6 +8,7 @@ import RectangleWidget from "./RectangleWidget.vue";
 import {defaultWidgetProps} from "./Widget.ts";
 import {Color} from "../Common.ts";
 import {closeInspectorDelay, openInspector, openInspectorDelay} from "../Components/Inspector.ts";
+import {buttonClickAudio} from "../main.ts";
 
 const htmlElement = ref<HTMLElement | null>(null);
 const props = withDefaults(defineProps<BevelledButtonWidgetProps>(), defaultWidgetProps);
@@ -22,9 +23,12 @@ function mouseDown() {
     }
 }
 
-function mouseUp() {
+function mouseUp(event: MouseEvent) {
     if (widget.isEnabled) {
         widget.isPressed.value = false;
+    }
+    if (event.target instanceof HTMLElement && htmlElement.value?.contains(event.target)) {
+        buttonClickAudio?.play();
     }
 }
 </script>

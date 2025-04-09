@@ -1,8 +1,8 @@
-import {type BoolString, LayoutDirection, type LayoutDirectionString, SizeLength, SizeLengthType, string2LayoutDirection, WidgetAlignment} from "../Common.ts";
-import {WidgetClass, type WidgetProps} from "./Widget.ts";
+import {type BoolString, LayoutDirection, type LayoutDirectionString, SizeLength, SizeLengthType, string2LayoutDirection, WidgetAlignment} from "../../Common.ts";
+import {WidgetClass, type WidgetProps} from "../Widget.ts";
 import type {CSSProperties} from "@vue/runtime-dom";
 import {reactive, ref} from "vue";
-import {AttributeType} from "../Components/Inspector.ts";
+import {AttributeType} from "../../Components/Inspector.ts";
 
 export interface StackPanelWidgetProps extends WidgetProps {
     Direction?: LayoutDirectionString | LayoutDirection;
@@ -34,7 +34,6 @@ export class StackPanelWidgetClass extends WidgetClass<StackPanelWidgetProps> {
     }
 
     updateFromProps(props: StackPanelWidgetProps) {
-        this.isContainer = true;
         super.updateFromProps(props);
         if (props.Direction !== undefined) {
             if (typeof props.Direction === "string") {
@@ -44,9 +43,10 @@ export class StackPanelWidgetClass extends WidgetClass<StackPanelWidgetProps> {
                 this.direction.value = props.Direction;
             }
         }
-        if (props.IsInverted === "true" || this.props?.IsInverted === true) {
-            this.isInverted.value = true;
+        else {
+            this.direction.value = LayoutDirection.Horizontal;
         }
+        this.isInverted.value = props.IsInverted === "true" || this.props?.IsInverted === true;
     }
 
     getStyle(): CSSProperties {

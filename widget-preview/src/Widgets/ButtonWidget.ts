@@ -1,6 +1,6 @@
 import type {WidgetProps} from "./Widget.ts";
 import {type BoolString, Color} from "../Common.ts";
-import {CanvasWidgetClass} from "./CanvasWidget.ts";
+import {CanvasWidgetClass} from "./Layouts/CanvasWidget.ts";
 import {ref} from "vue";
 import {AttributeType} from "../Components/Inspector.ts";
 
@@ -25,26 +25,27 @@ export class ButtonWidgetClass<T extends ButtonWidgetProps = ButtonWidgetProps> 
 
     updateFromProps(props: T) {
         super.updateFromProps(props);
-        if (props.IsClicked === "true" || props.IsClicked === true) {
-            this.isClicked.value = true;
-        }
-        if (props.IsChecked === "true" || props.IsChecked === true) {
-            this.isChecked.value = true;
-        }
-        if (props.IsPressed === "true" || props.IsPressed === true) {
-            this.isPressed.value = true;
-        }
-        if (props.IsAutoCheckingEnabled === "true" || props.IsAutoCheckingEnabled === true) {
-            this.isAutoCheckingEnabled.value = true;
-        }
+        this.isClicked.value = props.IsClicked === "true" || props.IsClicked === true;
+        this.isChecked.value = props.IsChecked === "true" || props.IsChecked === true;
+        this.isPressed.value = props.IsPressed === "true" || props.IsPressed === true;
+        this.isAutoCheckingEnabled.value = props.IsAutoCheckingEnabled === "true" || props.IsAutoCheckingEnabled === true;
         if (props.Text !== undefined && props.Text.length > 0) {
             this.text.value = props.Text;
+        }
+        else {
+            this.text.value = "";
         }
         if (props.Font !== undefined) {
             this.font = props.Font;
         }
+        else {
+            this.font = undefined;
+        }
         if (props.Color !== undefined) {
             this.color.value.update(props.Color);
+        }
+        else {
+            this.color.value.update(new Color(255, 255, 255));
         }
     }
 
