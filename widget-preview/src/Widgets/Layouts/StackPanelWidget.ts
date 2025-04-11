@@ -106,6 +106,9 @@ export class StackPanelWidgetClass extends WidgetClass<StackPanelWidgetProps> {
         let realHeight = -1;
         if (this.children.length > 0) {
             for (const child of this.children) {
+                if (!child.isVisible.value) {
+                    continue;
+                }
                 if (realWidth !== Infinity) {
                     if (child.width == Infinity) {
                         realWidth = Infinity;
@@ -176,7 +179,7 @@ export class StackPanelWidgetClass extends WidgetClass<StackPanelWidgetProps> {
     }
 }
 
-function getFlexDirection(direction?: LayoutDirection, isInverted?: boolean) {
+export function getFlexDirection(direction?: LayoutDirection, isInverted?: boolean) {
     if (direction !== LayoutDirection.Vertical) {
         return isInverted ? "row-reverse" : "row";
     }

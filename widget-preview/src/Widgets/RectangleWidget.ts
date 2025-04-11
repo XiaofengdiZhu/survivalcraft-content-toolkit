@@ -16,8 +16,8 @@ export interface RectangleWidgetProps extends WidgetProps {
     FillColor?: string | Color;
     OutlineColor?: string | Color;
     OutlineThickness?: string | number;
-    Texcoord1?: string;//number,number
-    Texcoord2?: string;//number,number
+    Texcoord1?: string;//number, number
+    Texcoord2?: string;//number, number
 }
 
 export const defaultRectangleWidgetProps = {
@@ -45,68 +45,66 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
 
     updateCanvas() {
         this.clearCanvas();
-        if (this.subtexture.value.length > 0) {
-            if (this.subtexture.value.startsWith("{Textures/Atlas/")) {
-                const name = this.subtexture.value.replace("{Textures/Atlas/", "").replace("}", "");
-                const definition = atlasDefinition[name] as {
-                    sx: number,
-                    sy: number,
-                    sWidth: number,
-                    sHeight: number
-                };
-                if (definition) {
-                    getImageBitmap("Atlases\\AtlasTexture")
-                    .then((bitmap) => {
-                        if (bitmap === null) {
-                            return;
-                        }
-                        const element = this.canvasElement.value;
-                        if (element) {
-                            const sx = this.texcoord1X.value * definition.sWidth + definition.sx;
-                            const sy = this.texcoord1Y.value * definition.sHeight + definition.sy;
-                            const sWidth = (this.texcoord2X.value - this.texcoord1X.value) * definition.sWidth;
-                            const sHeight = (this.texcoord2Y.value - this.texcoord1Y.value) * definition.sHeight;
-                            element.width = sWidth;
-                            element.height = sHeight;
-                            element.getContext("2d")
-                            ?.drawImage(bitmap, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
-                        }
-                    })
-                    .catch(error => console.log(error));
-                }
-            }
-            else {
-                getImageBitmap(this.subtexture.value.replace("{", "")
-                .replace("}", "")
-                .replaceAll("/", "\\"))
+        if (this.subtexture.value.startsWith("{Textures/Atlas/")) {
+            const name = this.subtexture.value.replace("{Textures/Atlas/", "").replace("}", "");
+            const definition = atlasDefinition[name] as {
+                sx: number,
+                sy: number,
+                sWidth: number,
+                sHeight: number
+            };
+            if (definition) {
+                getImageBitmap("Atlases\\AtlasTexture")
                 .then((bitmap) => {
                     if (bitmap === null) {
                         return;
                     }
-                    if (this.texcoord1X.value === 0 && this.texcoord1Y.value === 0 && this.texcoord2X.value === 1 && this.texcoord2Y.value === 1) {
-                        const element = this.canvasElement.value;
-                        if (element) {
-                            element.width = bitmap.width;
-                            element.height = bitmap.height;
-                            element.getContext("2d")
-                            ?.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-                        }
+                    const element = this.canvasElement.value;
+                    if (element) {
+                        const sx = this.texcoord1X.value * definition.sWidth + definition.sx;
+                        const sy = this.texcoord1Y.value * definition.sHeight + definition.sy;
+                        const sWidth = (this.texcoord2X.value - this.texcoord1X.value) * definition.sWidth;
+                        const sHeight = (this.texcoord2Y.value - this.texcoord1Y.value) * definition.sHeight;
+                        element.width = sWidth;
+                        element.height = sHeight;
+                        element.getContext("2d")
+                        ?.drawImage(bitmap, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
                     }
-                    else {
-                        const element = this.canvasElement.value;
-                        if (element) {
-                            const sx = this.texcoord1X.value * bitmap.width;
-                            const sy = this.texcoord1Y.value * bitmap.height;
-                            const sWidth = this.texcoord2X.value * bitmap.width - sx;
-                            const sHeight = this.texcoord2Y.value * bitmap.height - sy;
-                            element.width = sWidth;
-                            element.height = sHeight;
-                            element.getContext("2d")
-                            ?.drawImage(bitmap, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
-                        }
-                    }
-                });
+                })
+                .catch(error => console.log(error));
             }
+        }
+        else if (this.subtexture.value.startsWith("{")) {
+            getImageBitmap(this.subtexture.value.replace("{", "")
+            .replace("}", "")
+            .replaceAll("/", "\\"))
+            .then((bitmap) => {
+                if (bitmap === null) {
+                    return;
+                }
+                if (this.texcoord1X.value === 0 && this.texcoord1Y.value === 0 && this.texcoord2X.value === 1 && this.texcoord2Y.value === 1) {
+                    const element = this.canvasElement.value;
+                    if (element) {
+                        element.width = bitmap.width;
+                        element.height = bitmap.height;
+                        element.getContext("2d")
+                        ?.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
+                    }
+                }
+                else {
+                    const element = this.canvasElement.value;
+                    if (element) {
+                        const sx = this.texcoord1X.value * bitmap.width;
+                        const sy = this.texcoord1Y.value * bitmap.height;
+                        const sWidth = this.texcoord2X.value * bitmap.width - sx;
+                        const sHeight = this.texcoord2Y.value * bitmap.height - sy;
+                        element.width = sWidth;
+                        element.height = sHeight;
+                        element.getContext("2d")
+                        ?.drawImage(bitmap, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
+                    }
+                }
+            });
         }
     }
 
@@ -120,9 +118,7 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
         if (props.Depth !== undefined) {
             if (typeof props.Depth === "string") {
                 const num = parseInt(props.Depth);
-                if (!isNaN(num)) {
-                    this.depth.value = num;
-                }
+                this.depth.value = isNaN(num) ? 0 : num;
             }
             else {
                 this.depth.value = props.Depth;
@@ -151,9 +147,7 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
         if (props.OutlineThickness !== undefined) {
             if (typeof props.OutlineThickness === "string") {
                 const num = parseFloat(props.OutlineThickness);
-                if (!isNaN(num)) {
-                    this.outlineThickness.value = num;
-                }
+                this.outlineThickness.value = isNaN(num) ? 1 : num;
             }
             else {
                 this.outlineThickness.value = props.OutlineThickness;
@@ -166,13 +160,9 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
             const array = props.Texcoord1.split(",");
             if (array.length > 1) {
                 const num1 = parseFloat(array[0].trim());
-                if (!isNaN(num1)) {
-                    this.texcoord1X.value = num1;
-                }
+                this.texcoord1X.value = isNaN(num1) ? 0 : num1;
                 const num2 = parseFloat(array[1].trim());
-                if (!isNaN(num2)) {
-                    this.texcoord1Y.value = num2;
-                }
+                this.texcoord1Y.value = isNaN(num2) ? 0 : num2;
             }
         }
         else {
@@ -183,13 +173,9 @@ export class RectangleWidgetClass extends WidgetClass<RectangleWidgetProps> {
             const array = props.Texcoord2.split(",");
             if (array.length > 1) {
                 const num1 = parseFloat(array[0].trim());
-                if (!isNaN(num1)) {
-                    this.texcoord2X.value = num1;
-                }
+                this.texcoord2X.value = isNaN(num1) ? 1 : num1;
                 const num2 = parseFloat(array[1].trim());
-                if (!isNaN(num2)) {
-                    this.texcoord2Y.value = num2;
-                }
+                this.texcoord2Y.value = isNaN(num2) ? 1 : num2;
             }
         }
         else {

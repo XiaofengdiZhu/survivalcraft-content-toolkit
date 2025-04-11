@@ -6,18 +6,18 @@ import {AttributeType} from "../Components/Inspector.ts";
 import {fontSelected} from "../main.ts";
 
 export interface FontTextWidgetProps extends WidgetProps {
-    Text?: string,
-    TextAnchor?: string,//TextAnchor,TextAnchor,...
-    TextOrientation?: TextOrientationString,
-    Font?: string,
-    FontScale?: string | number,
-    FontSpacing?: string,//number,number
-    WordWrap?: BoolString | boolean,
-    Ellipsis?: BoolString | boolean,
-    MaxLines?: string | number,
-    Color?: string | Color,
-    DropShadow?: BoolString | boolean,
-    TextureLinearFilter?: BoolString | boolean
+    Text?: string;
+    TextAnchor?: string;//TextAnchor,TextAnchor,...
+    TextOrientation?: TextOrientationString;
+    Font?: string;
+    FontScale?: string | number;
+    FontSpacing?: string;//number, number
+    WordWrap?: BoolString | boolean;
+    Ellipsis?: BoolString | boolean;
+    MaxLines?: string | number;
+    Color?: string | Color;
+    DropShadow?: BoolString | boolean;
+    TextureLinearFilter?: BoolString | boolean;
 }
 
 export const defaultFontTextWidgetProps = {
@@ -193,9 +193,7 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
         if (props.FontScale !== undefined) {
             if (typeof props.FontScale === "string") {
                 const num = parseFloat(props.FontScale);
-                if (!isNaN(num)) {
-                    this.fontScale.value = num;
-                }
+                this.fontScale.value = isNaN(num) ? 1 : num;
             }
             else {
                 this.fontScale.value = props.FontScale;
@@ -208,13 +206,9 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
             const array = props.FontSpacing.split(",");
             if (array.length > 1) {
                 const num1 = parseFloat(array[0].trim());
-                if (!isNaN(num1)) {
-                    this.fontSpacingX.value = num1;
-                }
+                this.fontSpacingX.value = isNaN(num1) ? 0 : num1;
                 const num2 = parseFloat(array[1].trim());
-                if (!isNaN(num2)) {
-                    this.fontSpacingY.value = num2;
-                }
+                this.fontSpacingY.value = isNaN(num2) ? 0 : num2;
             }
         }
         else {
@@ -226,9 +220,7 @@ export class FontTextWidgetClass extends WidgetClass<FontTextWidgetProps> {
         if (props.MaxLines !== undefined) {
             if (typeof props.MaxLines === "string") {
                 const num = parseInt(props.MaxLines);
-                if (!isNaN(num)) {
-                    this.maxLines.value = num;
-                }
+                this.maxLines.value = isNaN(num) ? 2147483647 : num;
             }
             else {
                 this.maxLines.value = props.MaxLines;

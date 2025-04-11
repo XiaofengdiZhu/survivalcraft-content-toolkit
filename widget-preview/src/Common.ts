@@ -312,9 +312,53 @@ export class Color {
     toArrayString() {
         return `${this.R},${this.G},${this.B},${this.A}`;
     }
+
+    equals(other: Color | number[] | number, g?: number, b?: number, a?: number) {
+        if (typeof other === "number") {
+            return this.R === other && this.G === g && this.B === b && this.A === (typeof a === "undefined" ?
+                255 :
+                a);
+        }
+        else if (Array.isArray(other)) {
+            return this.R === other[0] && this.G === other[1] && this.B === other[2] && this.A === (typeof other[3] === "undefined" ?
+                255 :
+                other[3]);
+        }
+        else {
+            return this.R === other.R && this.G === other.G && this.B === other.B && this.A === other.A;
+        }
+    }
+
+    static lerp(c1: Color, c2: Color, f: number) {
+        return new Color(lerp(c1.R, c2.R, f),
+            lerp(c1.G, c2.G, f),
+            lerp(c1.B, c2.B, f),
+            lerp(c1.A, c2.A, f));
+    }
+
+    static multiplyColorOnly(c: Color, s: number) {
+        return new Color(clamp(c.R * s, 0, 255),
+            clamp(c.G * s, 0, 255),
+            clamp(c.B * s, 0, 255),
+            clamp(c.A * s, 0, 255));
+    }
 }
 
 export interface Vector2 {
     X: number;
     Y: number;
+}
+
+export function lerp(x1: number, x2: number, f: number) {
+    return x1 + (x2 - x1) * f;
+}
+
+export function clamp(value: number, min: number, max: number) {
+    if (min > max) {
+        throw new Error("min must be less than max");
+    }
+    if (value < min) {
+        return min;
+    }
+    return value > max ? max : value;
 }

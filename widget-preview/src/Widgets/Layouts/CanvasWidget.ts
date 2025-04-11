@@ -122,6 +122,9 @@ export class CanvasWidgetClass<T extends WidgetProps = WidgetProps> extends Widg
             let widthFromChildren = -1;
             let heightFromChildren = -1;
             for (const child of this.children) {
+                if (!child.isVisible.value) {
+                    continue;
+                }
                 if (widthFromChildren != Infinity) {
                     if (child.width == Infinity) {
                         widthFromChildren = Infinity;

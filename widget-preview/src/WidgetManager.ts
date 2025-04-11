@@ -12,6 +12,7 @@ import BevelledRectangleWidget from "./Widgets/BevelledRectangleWidget.vue";
 import BevelledButtonWidget from "./Widgets/BevelledButtonWidget.vue";
 import BitmapButtonWidget from "./Widgets/BitmapButtonWidget.vue";
 import PanoramaWidget from "./Widgets/PanoramaWidget.vue";
+import ValueBarWidget from "./Widgets/ValueBarWidget.vue";
 import {NodeTypes, type TemplateChildNode} from "@vue/compiler-core";
 import {bevelledButtonWidgetLinearDescents} from "./Widgets/BevelledButtonWidget.ts";
 import {allStyles, createAttributeNode, applyStyleToNode} from "./main.ts";
@@ -30,7 +31,8 @@ const allComponents: Record<string, Component> = {
     LabelWidget,
     BevelledButtonWidget,
     BitmapButtonWidget,
-    PanoramaWidget
+    PanoramaWidget,
+    ValueBarWidget
 };
 
 export const linearDescentsMap: Map<string, Map<string, string>> = new Map();

@@ -80,7 +80,6 @@ export const languageNames = ref<{
 export const languageSelected = ref<string>(getState("languageSelected") ?? globalThis.navigator.language.toLowerCase() ?? "en-us");
 export const languageStrings = shallowReactive<Map<string, any>>(new Map());
 export const fontNames = ref<string[]>([]);
-console.log("fontSelected", getState("fontSelected") ?? "no");
 export const fontSelected = ref<string>(getState("fontSelected") ?? "system-ui");
 export let atlasDefinition: any = {};
 export let buttonClickAudio: AudioArrayBufferPlayer | null = null;

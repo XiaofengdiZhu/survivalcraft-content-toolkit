@@ -27,9 +27,7 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
         if (props.FontScale !== undefined) {
             if (typeof props.FontScale === "string") {
                 const num = parseFloat(props.FontScale);
-                if (!isNaN(num)) {
-                    this.fontScale.value = num;
-                }
+                this.fontScale.value = isNaN(num) ? 1 : num;
             }
             else {
                 this.fontScale.value = props.FontScale;
@@ -59,9 +57,7 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
         if (props.AmbientLight !== undefined) {
             if (typeof props.AmbientLight === "string") {
                 const num = parseFloat(props.AmbientLight);
-                if (!isNaN(num)) {
-                    this.ambientLight.value = num;
-                }
+                this.ambientLight.value = isNaN(num) ? 0.6 : num;
             }
             else {
                 this.ambientLight.value = props.AmbientLight;
@@ -73,9 +69,7 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
         if (props.DirectionalLight !== undefined) {
             if (typeof props.DirectionalLight === "string") {
                 const num = parseFloat(props.DirectionalLight);
-                if (!isNaN(num)) {
-                    this.directionalLight.value = num;
-                }
+                this.directionalLight.value = isNaN(num) ? 0.4 : num;
             }
             else {
                 this.directionalLight.value = props.DirectionalLight;
@@ -87,9 +81,7 @@ export class BevelledButtonWidgetClass extends ButtonWidgetClass<BevelledButtonW
         if (props.BevelSize !== undefined) {
             if (typeof props.BevelSize === "string") {
                 const num = parseFloat(props.BevelSize);
-                if (!isNaN(num)) {
-                    this.bevelSize.value = num;
-                }
+                this.bevelSize.value = isNaN(num) ? 2 : num;
             }
             else {
                 this.bevelSize.value = props.BevelSize;

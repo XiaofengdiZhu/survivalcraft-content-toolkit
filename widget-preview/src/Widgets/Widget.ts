@@ -4,20 +4,20 @@ import {getCurrentInstance, onUnmounted, reactive, type Ref, ref, watch} from "v
 import {AttributeType, InspectorProvider} from "../Components/Inspector.ts";
 
 export interface WidgetProps {
-    Name?: string,
-    GlobalScale?: string | number,
-    IsVisible?: BoolString | boolean,
-    IsEnabled?: BoolString | boolean,
-    ClampToBounds?: BoolString | boolean,
-    Margin?: string,//number,number
-    HorizontalAlignment?: WidgetAlignmentString | WidgetAlignment,
-    VerticalAlignment?: WidgetAlignmentString | WidgetAlignment,
-    Size?: string,//number,number
-    Style?: string,
-    CanvasWidgetPosition?: string;//number,number
+    Name?: string;
+    GlobalScale?: string | number;
+    IsVisible?: BoolString | boolean;
+    IsEnabled?: BoolString | boolean;
+    ClampToBounds?: BoolString | boolean;
+    Margin?: string;//number, number
+    HorizontalAlignment?: WidgetAlignmentString | WidgetAlignment;
+    VerticalAlignment?: WidgetAlignmentString | WidgetAlignment;
+    Size?: string;//number, number
+    Style?: string;
+    CanvasWidgetPosition?: string;//number, number
     //For this toolkit
-    NoInspector?: boolean,
-    OverrideChildren?: string | any
+    NoInspector?: boolean;
+    OverrideChildren?: string | any;
 }
 
 export const defaultWidgetProps = {
@@ -417,8 +417,7 @@ export class WidgetClass<T extends WidgetProps = WidgetProps> {
                 AttributeType.Vector2,
                 () => {
                     return {
-                        X: this.canvasWidgetPositionX.value,
-                        Y: this.canvasWidgetPositionY.value
+                        X: this.canvasWidgetPositionX.value, Y: this.canvasWidgetPositionY.value
                     };
                 },
                 value => {

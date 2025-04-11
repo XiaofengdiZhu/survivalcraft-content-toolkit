@@ -11,7 +11,7 @@ export interface BevelledRectangleWidgetProps extends ButtonWidgetProps {
     BevelSize?: string | number;
     AmbientLight?: string | number;
     DirectionalLight?: string | number;
-    Texture?: string;
+    Texture?: string;// Not supported in this preview
     TextureScale?: string | number;
     TextureLinearFilter?: BoolString | boolean;
     CenterColor?: string | Color;
@@ -41,9 +41,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.RoundingRadius !== undefined) {
             if (typeof props.RoundingRadius === "string") {
                 const num = parseFloat(props.RoundingRadius);
-                if (!isNaN(num)) {
-                    this.roundingRadius.value = num;
-                }
+                this.roundingRadius.value = isNaN(num) ? 6 : num;
             }
             else {
                 this.roundingRadius.value = props.RoundingRadius;
@@ -55,9 +53,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.RoundingCount !== undefined) {
             if (typeof props.RoundingCount === "string") {
                 const num = parseInt(props.RoundingCount);
-                if (!isNaN(num)) {
-                    this.roundingCount.value = num;
-                }
+                this.roundingCount.value = isNaN(num) ? 3 : num;
             }
             else {
                 this.roundingCount.value = props.RoundingCount;
@@ -69,9 +65,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.BevelSize !== undefined) {
             if (typeof props.BevelSize === "string") {
                 const num = parseFloat(props.BevelSize);
-                if (!isNaN(num)) {
-                    this.bevelSize.value = num;
-                }
+                this.bevelSize.value = isNaN(num) ? 2 : num;
             }
             else {
                 this.bevelSize.value = props.BevelSize;
@@ -83,9 +77,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.AmbientLight !== undefined) {
             if (typeof props.AmbientLight === "string") {
                 const num = parseFloat(props.AmbientLight);
-                if (!isNaN(num)) {
-                    this.ambientLight.value = num;
-                }
+                this.ambientLight.value = isNaN(num) ? 0.6 : num;
             }
             else {
                 this.ambientLight.value = props.AmbientLight;
@@ -97,9 +89,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.DirectionalLight !== undefined) {
             if (typeof props.DirectionalLight === "string") {
                 const num = parseFloat(props.DirectionalLight);
-                if (!isNaN(num)) {
-                    this.directionalLight.value = num;
-                }
+                this.directionalLight.value = isNaN(num) ? 0.4 : num;
             }
             else {
                 this.directionalLight.value = props.DirectionalLight;
@@ -117,9 +107,7 @@ export class BevelledRectangleWidgetClass extends CanvasWidgetClass<BevelledRect
         if (props.TextureScale !== undefined) {
             if (typeof props.TextureScale === "string") {
                 const num = parseFloat(props.TextureScale);
-                if (!isNaN(num)) {
-                    this.textureScale.value = num;
-                }
+                this.textureScale.value = isNaN(num) ? 1 : num;
             }
             else {
                 this.textureScale.value = props.TextureScale;

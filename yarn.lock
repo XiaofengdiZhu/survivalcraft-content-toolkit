@@ -314,10 +314,10 @@
   resolved "https://mirrors.cloud.tencent.com/npm/@types/mocha/-/mocha-10.0.10.tgz#91f62905e8d23cbd66225312f239454a23bebfa0"
   integrity sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==
 
-"@types/node@20.x":
-  version "20.17.19"
-  resolved "https://mirrors.cloud.tencent.com/npm/@types/node/-/node-20.17.19.tgz#0f2869555719bef266ca6e1827fcdca903c1a697"
-  integrity sha512-LEwC7o1ifqg/6r2gn9Dns0f1rhK+fPFDoMiceTJ6kWmVk6bgXBI/9IOWfVan4WiAavK9pIVWdX0/e3J+eEUh5A==
+"@types/node@^20.17.30":
+  version "20.17.30"
+  resolved "http://mirrors.cloud.tencent.com/npm/@types/node/-/node-20.17.30.tgz#1d93f656d3b869dbef7b796568ac457606ba58d0"
+  integrity sha512-7zf4YyHA+jvBNfVrk2Gtvs6x7E8V+YDW05bNfG2XkWDJfYRXrTiP/DsB2zSYTaHX0bGIujTBQdMVAhb+j7mwpg==
   dependencies:
     undici-types "~6.19.2"
 
@@ -422,10 +422,10 @@
     supports-color "^9.4.0"
     yargs "^17.7.2"
 
-"@vscode/test-electron@^2.5.1":
-  version "2.5.1"
-  resolved "http://mirrors.cloud.tencent.com/npm/@vscode/test-electron/-/test-electron-2.5.1.tgz#b7115c1f939de947e75341b031d1befd9279a5d8"
-  integrity sha512-x4dE4IF3PkHM8/5BVeSksHk7UL1hSI/XEgMxKLmqY8DO46KZa6f6VkIGUflNxMJDBggvQ5Kqvw1qChSzllCc0w==
+"@vscode/test-electron@^2.5.2":
+  version "2.5.2"
+  resolved "http://mirrors.cloud.tencent.com/npm/@vscode/test-electron/-/test-electron-2.5.2.tgz#f7d4078e8230ce9c94322f2a29cc16c17954085d"
+  integrity sha512-8ukpxv4wYe0iWMRQU18jhzJOHkeGKbnw7xWRX3Zw1WJA4cEKbHcmmLPdPrPtL6rhDcrlCZN+xKRpv09n4gRHYg==
   dependencies:
     http-proxy-agent "^7.0.2"
     https-proxy-agent "^7.0.5"

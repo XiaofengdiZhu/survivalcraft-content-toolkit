@@ -6,7 +6,7 @@
     "Survivalcraft",
     "生存战争"
   ],
-  "version": "0.4.0",
+  "version": "0.4.1",
   "icon": "icon.png",
   "author": {
     "name": "XiaofengdiZhu 销锋镝铸",
@@ -369,16 +369,18 @@
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "vsce:package": "vsce package",
+    "vsce:publish": "vsce publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
+    "@types/node": "^20.17.30",
     "@types/vscode": "^1.99.1",
     "@typescript-eslint/eslint-plugin": "^8.26.1",
     "@typescript-eslint/parser": "^8.26.1",
     "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.5.1",
+    "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.25.1",
     "eslint": "^9.22.0",
     "npm-run-all": "^4.1.5",

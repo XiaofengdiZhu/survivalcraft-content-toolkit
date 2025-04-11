@@ -1,6 +1,7 @@
 import {WidgetClass} from "./Widget.ts";
 import {onMounted, ref} from "vue";
 import {getImageBitmap} from "../main.ts";
+import {lerp} from "../Common.ts";
 
 let texture: ImageBitmap | undefined;
 
@@ -94,6 +95,11 @@ export class PanoramaWidgetClass extends WidgetClass {
         globalThis.requestAnimationFrame(time => {
             this.draw(time);
         });
+    }
+
+    initInspectorProvider() {
+        super.initInspectorProvider();
+        this.inspectorProvider.removeAttribute("Size");
     }
 }
 
@@ -811,10 +817,6 @@ function dot(g: number[], x: number, y: number, z: number) {
 
 function powSign(x: number, n: number) {
     return Math.sign(x) * Math.pow(Math.abs(x), n);
-}
-
-function lerp(x1: number, x2: number, f: number) {
-    return x1 + (x2 - x1) * f;
 }
 
 function saturate(x: number) {
